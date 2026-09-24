@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from './infrastructure/persistence/entities/product.entity';
+import { ProductSeeder } from './infrastructure/persistence/seeds/product.seeder';
 
 @Module({
   imports: [
@@ -19,11 +20,12 @@ import { ProductEntity } from './infrastructure/persistence/entities/product.ent
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [ProductEntity],
-        synchronize: true, // Auto-sincronización habilitada para agilizar el despliegue de pruebas en sandbox
+        synchronize: true,
       }),
     }),
+    TypeOrmModule.forFeature([ProductEntity]),
   ],
   controllers: [],
-  providers: [],
+  providers: [ProductSeeder],
 })
 export class AppModule {}
