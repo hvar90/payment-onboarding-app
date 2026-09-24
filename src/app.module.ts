@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from './infrastructure/persistence/entities/product.entity';
 import { ProductSeeder } from './infrastructure/persistence/seeds/product.seeder';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ProductSeeder } from './infrastructure/persistence/seeds/product.seeder
       }),
     }),
     TypeOrmModule.forFeature([ProductEntity]),
+    ProductsModule, 
   ],
   controllers: [],
   providers: [ProductSeeder],
