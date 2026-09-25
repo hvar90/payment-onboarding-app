@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductEntity } from './infrastructure/persistence/entities/product.entity';
-import { ProductSeeder } from './infrastructure/persistence/seeds/product.seeder';
 import { ProductsModule } from './products/products.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -20,14 +19,14 @@ import { ProductsModule } from './products/products.module';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [ProductEntity],
-        synchronize: true,
+        autoLoadEntities: true, // <-- Esto carga automáticamente las entidades de products y transactions
+        synchronize: true,      // Solo para desarrollo / prueba técnica
       }),
     }),
-    TypeOrmModule.forFeature([ProductEntity]),
-    ProductsModule, 
+    ProductsModule,
+    TransactionsModule,
   ],
   controllers: [],
-  providers: [ProductSeeder],
+  providers: [],
 })
 export class AppModule {}
