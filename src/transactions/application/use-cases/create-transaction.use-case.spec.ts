@@ -45,7 +45,7 @@ describe('CreateTransactionUseCase', () => {
 
     const dto = {
       productId: 'prod-1',
-      customerData: { email: 'test@wompi.co', name: 'Heberth' },
+      customerData: { email: 'test@example.co', name: 'Heberth' },
       cardData: { token: 'tok_test_123' },
     };
 
