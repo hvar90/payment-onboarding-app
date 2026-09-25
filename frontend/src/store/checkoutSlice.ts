@@ -1,6 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+export interface TransactionResult {
+  id?: string;
+  status?: string;
+  reference?: string;
+  amountInCents?: number;
+  currency?: string;
+  customerEmail?: string;
+  [key: string]: unknown; // Permite propiedades adicionales seguras sin usar 'any'
+}
+
 interface CheckoutState {
   step: number; // 1: Productos, 2: Pago/Entrega, 3: Resumen, 4: Resultado
   selectedProductId: string | null;
@@ -12,7 +22,7 @@ interface CheckoutState {
     token: string;
     installments: number;
   } | null;
-  transactionResult: any | null;
+  transactionResult: TransactionResult | null;
 }
 
 // Cargar estado inicial desde localStorage para cumplir con la resiliencia ante un refresh
@@ -56,7 +66,7 @@ export const checkoutSlice = createSlice({
       state.cardData = action.payload;
       localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
     },
-    setTransactionResult: (state, action: PayloadAction<any>) => {
+    setTransactionResult: (state, action: PayloadAction<TransactionResult>) => {
       state.transactionResult = action.payload;
       localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
     },
