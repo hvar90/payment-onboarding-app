@@ -5,12 +5,14 @@ import { ProductsController } from './infrastructure/controllers/products.contro
 import { GetProductsUseCase } from './application/use-cases/get-products.use-case';
 import { PostgresProductRepository } from './infrastructure/persistence/adapters/postgres-product.repository';
 import { IProductRepository } from './domain/product.repository.interface';
+import { ProductSeeder } from './infrastructure/persistence/seeds/product.seeder'
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProductEntity])],
   controllers: [ProductsController],
   providers: [
     GetProductsUseCase,
+    ProductSeeder,
     {
       provide: IProductRepository,
       useClass: PostgresProductRepository,

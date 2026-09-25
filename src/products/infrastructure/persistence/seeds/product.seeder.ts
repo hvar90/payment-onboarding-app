@@ -16,7 +16,7 @@ export class ProductSeeder implements OnApplicationBootstrap {
     if (count === 0) {
       const initialProducts = [
         {
-          name: 'Suscripción Premium Wompi',
+          name: 'Suscripción Premium Mensual',
           description: 'Acceso completo a herramientas avanzadas de desarrollo y pasarelas de pago.',
           price: 50000.00,
           stock: 15,
