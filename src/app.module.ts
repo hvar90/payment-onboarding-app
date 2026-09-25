@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { DeliveriesModule } from './deliveries/deliveries.module'; 
 
 @Module({
   imports: [
@@ -19,12 +20,13 @@ import { TransactionsModule } from './transactions/transactions.module';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true, // <-- Esto carga automáticamente las entidades de products y transactions
+        autoLoadEntities: true, // Carga automáticamente las entidades (products, transactions, deliveries)
         synchronize: true,      // Solo para desarrollo / prueba técnica
       }),
     }),
     ProductsModule,
     TransactionsModule,
+    DeliveriesModule, 
   ],
   controllers: [],
   providers: [],
