@@ -21,7 +21,7 @@ import { CustomersModule } from './customers/customers.module';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        autoLoadEntities: true, // Carga automáticamente las entidades (products, transactions, deliveries)
+        autoLoadEntities: true, // Carga automáticamente las entidades (products, transactions, deliveries, customers)
         synchronize: true,      // Solo para desarrollo / prueba técnica
       }),
     }),
