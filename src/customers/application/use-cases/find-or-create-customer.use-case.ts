@@ -13,7 +13,6 @@ export class FindOrCreateCustomerUseCase {
     name: string;
     email: string;
     phone: string;
-    document: string;
   }): Promise<CustomerModel> {
     // 1. Buscar si ya existe por email o documento 
     let customer = await this.customerRepository.findByEmail(params.email);
