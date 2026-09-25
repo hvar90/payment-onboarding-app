@@ -23,6 +23,9 @@ import { CustomersModule } from './customers/customers.module';
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true, // Carga automáticamente las entidades (products, transactions, deliveries, customers)
         synchronize: true,      // Solo para desarrollo / prueba técnica
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
     ProductsModule,
