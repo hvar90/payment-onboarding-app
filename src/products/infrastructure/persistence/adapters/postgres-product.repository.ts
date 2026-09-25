@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductEntity } from '../persistence/entities/product.entity';
-import { ProductModel } from '../../domain/product.model';
+import { ProductEntity } from '../entities/product.entity';
+import { ProductModel } from '../../../domain/product.model';
 
 @Injectable()
 export class PostgresProductRepository {

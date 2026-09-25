@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { CreateTransactionUseCase } from '../../application/create-transaction.use-case';
+import { CreateTransactionUseCase } from '../../application/use-cases/create-transaction.use-case';
 
 @Controller('transactions')
 export class TransactionsController {

@@ -14,8 +14,7 @@ export class DeliveryMapper {
     );
   }
 
-  static toPersistence(model: DeliveryModel): DeliveryEntity | null{
-    if (!model) return null;
+  static toPersistence(model: DeliveryModel): DeliveryEntity {
     const entity = new DeliveryEntity();
     entity.id = model.id;
     entity.transactionId = model.transactionId;

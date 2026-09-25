@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PostgresTransactionRepository } from '../infrastructure/adapters/postgres-transaction.repository';
-import { ApiAdapter } from '../infrastructure/adapters/api.adapter';
+import { PostgresTransactionRepository } from '../../infrastructure/persistence/adapters/postgres-transaction.repository';
+import { ApiAdapter } from '../../infrastructure/gateways/api.adapter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductEntity } from '../../products/infrastructure/persistence/entities/product.entity';
+import { ProductEntity } from '../../../products/infrastructure/persistence/entities/product.entity';
 
 @Injectable()
 export class CreateTransactionUseCase {

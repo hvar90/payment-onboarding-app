@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateTransactionUseCase } from './create-transaction.use-case';
-import { PostgresTransactionRepository } from '../infrastructure/adapters/postgres-transaction.repository';
-import { ApiAdapter } from '../infrastructure/adapters/api.adapter';
+import { PostgresTransactionRepository } from '../../infrastructure/persistence/adapters/postgres-transaction.repository';
+import { ApiAdapter } from '../../infrastructure/gateways/api.adapter';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ProductEntity } from '../../products/infrastructure/persistence/entities/product.entity';
+import { ProductEntity } from '../../../products/infrastructure/persistence/entities/product.entity';
 import { NotFoundException } from '@nestjs/common';
 
 describe('CreateTransactionUseCase', () => {

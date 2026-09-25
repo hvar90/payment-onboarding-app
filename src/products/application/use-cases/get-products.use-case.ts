@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { PostgresProductRepository } from '../infrastructure/adapters/postgres-product.repository';
-import { ProductModel } from '../domain/product.model';
+import { PostgresProductRepository } from '../../infrastructure/persistence/adapters/postgres-product.repository';
+import { ProductModel } from '../../domain/product.model';
 
 @Injectable()
 export class GetProductsUseCase {
