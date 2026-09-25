@@ -1,11 +1,12 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { PostgresProductRepository } from '../../infrastructure/persistence/adapters/postgres-product.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { IProductRepository } from '../../domain/product.repository.interface';
 import { ProductModel } from '../../domain/product.model';
 
 @Injectable()
 export class GetProductsUseCase {
   constructor(
-    private readonly productRepository: PostgresProductRepository,
+    @Inject(IProductRepository)
+    private readonly productRepository: IProductRepository,
   ) {}
 
   async execute(): Promise<ProductModel[]> {
