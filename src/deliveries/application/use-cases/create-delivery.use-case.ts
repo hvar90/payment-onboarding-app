@@ -15,7 +15,7 @@ export class CreateDeliveryUseCase {
     city: string;
   }): Promise<DeliveryModel> {
     const delivery = new DeliveryModel(
-      Date.now().toString(), // o UUID según prefieras
+      Date.now().toString(), 
       params.transactionId,
       params.address,
       params.city,
