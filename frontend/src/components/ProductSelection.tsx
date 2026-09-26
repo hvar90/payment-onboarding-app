@@ -9,6 +9,7 @@ interface Product {
   description: string;
   price: number;
   currency: string;
+  stock: number; // 1. Añadimos la propiedad stock aquí
 }
 
 export const ProductSelection: React.FC = () => {
@@ -19,8 +20,8 @@ export const ProductSelection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Petición al backend de NestJS en el puerto 3000
+  // Función para cargar los productos (permite volver a consultarlos si es necesario)
+  const fetchProducts = () => {
     fetch('http://localhost:3000/products')
       .then((res) => {
         if (!res.ok) throw new Error('Error al cargar los productos');
@@ -34,15 +35,21 @@ export const ProductSelection: React.FC = () => {
         setError(err.message);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchProducts();
   }, []);
 
-  const handleSelect = (productId: string) => {
+  const handleSelect = (productId: string, stock: number) => {
+    // Opcional: si no hay stock, impedir la selección
+    if (stock <= 0) return;
     dispatch(setSelectedProduct(productId));
   };
 
   const handleNext = () => {
     if (selectedProductId) {
-      dispatch(setStep(2)); // Avanzar al siguiente paso del onboarding
+      dispatch(setStep(2));
     }
   };
 
@@ -73,15 +80,22 @@ export const ProductSelection: React.FC = () => {
       <div className="products-grid">
         {products.map((product) => {
           const isSelected = selectedProductId === product.id;
+          const isOutOfStock = product.stock <= 0;
+
           return (
             <div
               key={product.id}
-              onClick={() => handleSelect(product.id)}
-              className={`product-card ${isSelected ? 'selected' : ''}`}
+              onClick={() => handleSelect(product.id, product.stock)}
+              className={`product-card ${isSelected ? 'selected' : ''} ${isOutOfStock ? 'out-of-stock' : ''}`}
+              style={{ opacity: isOutOfStock ? 0.6 : 1, cursor: isOutOfStock ? 'not-allowed' : 'pointer' }}
             >
               <div className="product-info">
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
+                {/* 2. Añadimos el elemento visual del stock */}
+                <span className="product-stock" style={{ display: 'block', fontSize: '12px', marginTop: '6px', fontWeight: 600, color: isOutOfStock ? '#e74c3c' : '#27ae60' }}>
+                  {isOutOfStock ? 'Agotado (0 unidades)' : `Disponibles: ${product.stock} un.`}
+                </span>
               </div>
               <div className="product-pricing">
                 <span className="product-price">

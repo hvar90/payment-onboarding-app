@@ -7,21 +7,20 @@ interface Product {
   id: string;
   name: string;
   description: string;
-  priceInCents: number;
+  price: number;
   currency: string;
 }
 
 export const CheckoutSummary: React.FC = () => {
   const dispatch = useDispatch();
   const { selectedProductId, customerData, cardData } = useSelector(
-    (state: RootState) => state.checkout
+    (state: RootState) => state.checkout,
   );
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Obtener la información completa del producto seleccionado para mostrarla en el resumen
   useEffect(() => {
     if (selectedProductId) {
       fetch('http://localhost:3000/products')
@@ -30,12 +29,14 @@ export const CheckoutSummary: React.FC = () => {
           const found = data.find((p) => p.id === selectedProductId);
           if (found) setProduct(found);
         })
-        .catch(() => setError('No se pudo cargar la información del producto.'));
+        .catch(() =>
+          setError('No se pudo cargar la información del producto.'),
+        );
     }
   }, [selectedProductId]);
 
   const handlePay = async () => {
-    if (!product || !customerData || !cardData) {
+    if (!product || !selectedProductId || !customerData || !cardData) {
       setError('Faltan datos en la orden para procesar el pago.');
       return;
     }
@@ -44,17 +45,17 @@ export const CheckoutSummary: React.FC = () => {
     setError(null);
 
     try {
-      // Estructura que espera tu CreateTransactionDto en el backend
+      // Estructura exacta que exige el CreateTransactionDto del backend
       const payload = {
-        amountInCents: product.priceInCents,
-        currency: product.currency,
-        customerEmail: customerData.email,
-        paymentMethod: {
-          type: 'CARD',
-          installments: cardData.installments,
-          token: cardData.token,
+        productId: selectedProductId,
+        customerData: {
+          email: customerData.email,
+          fullName: customerData.fullName,
         },
-        reference: `ORDER-${Date.now()}`,
+        cardData: {
+          token: cardData.token,
+          installments: cardData.installments,
+        },
       };
 
       const response = await fetch('http://localhost:3000/transactions', {
@@ -66,14 +67,20 @@ export const CheckoutSummary: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al procesar la transacción en el servidor.');
+        const errRes = await response.json();
+        throw new Error(
+          errRes.message
+            ? Array.isArray(errRes.message)
+              ? errRes.message.join(', ')
+              : errRes.message
+            : 'Error al procesar la transacción en el servidor.',
+        );
       }
 
       const result = await response.json();
 
-      // Guardar resultado y avanzar al paso de éxito/resultado (Paso 4)
       dispatch(setTransactionResult(result));
-      dispatch(setStep(4));
+      dispatch(setStep(4)); // Avanzar a la pantalla de resultado
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -90,59 +97,59 @@ export const CheckoutSummary: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-800">Resumen de tu Orden</h2>
-        <p className="text-sm text-gray-500 mt-1">Verifica los datos antes de confirmar el pago</p>
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <h2 style={styles.title}>Resumen de tu Orden</h2>
+        <p style={styles.subtitle}>
+          Verifica los datos antes de confirmar el pago
+        </p>
       </div>
 
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm text-center">
-          {error}
-        </div>
-      )}
+      {error && <div style={styles.errorAlert}>⚠️ {error}</div>}
 
-      <div className="space-y-4">
+      <div style={styles.sectionsContainer}>
         {/* Detalle del Producto */}
-        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-2">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Producto Seleccionado</h3>
+        <div style={styles.cardBox}>
+          <h3 style={styles.sectionLabel}>Producto Seleccionado</h3>
           {product ? (
-            <div className="flex justify-between items-center">
+            <div style={styles.rowBetween}>
               <div>
-                <p className="font-semibold text-gray-900">{product.name}</p>
-                <p className="text-sm text-gray-600">{product.description}</p>
+                <p style={styles.productName}>{product.name}</p>
+                <p style={styles.productDesc}>{product.description}</p>
               </div>
-              <span className="font-bold text-indigo-600 text-lg">
-                ${(product.priceInCents / 100).toLocaleString()} {product.currency}
+              <span style={styles.productPrice}>
+                ${(product.price / 100).toLocaleString()} {product.currency}
               </span>
             </div>
           ) : (
-            <p className="text-sm text-gray-500">Cargando producto...</p>
+            <p style={styles.mutedText}>Cargando producto...</p>
           )}
         </div>
 
         {/* Detalle del Cliente */}
-        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-1">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Datos del Cliente</h3>
-          <p className="text-gray-900 font-medium">{customerData?.fullName}</p>
-          <p className="text-sm text-gray-600">{customerData?.email}</p>
+        <div style={styles.cardBox}>
+          <h3 style={styles.sectionLabel}>Datos del Cliente</h3>
+          <p style={styles.boldText}>{customerData?.fullName}</p>
+          <p style={styles.mutedText}>{customerData?.email}</p>
         </div>
 
         {/* Detalle del Pago */}
-        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-1">
-          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Método de Pago</h3>
-          <p className="text-gray-900 font-medium">Tarjeta de Crédito / Débito</p>
-          <p className="text-sm text-gray-600">Cuotas seleccionadas: {cardData?.installments}</p>
+        <div style={styles.cardBox}>
+          <h3 style={styles.sectionLabel}>Método de Pago</h3>
+          <p style={styles.boldText}>Tarjeta de Crédito / Débito</p>
+          <p style={styles.mutedText}>
+            Cuotas seleccionadas: {cardData?.installments}
+          </p>
         </div>
       </div>
 
       {/* Botones de Acción */}
-      <div className="flex justify-between pt-4">
+      <div style={styles.buttonContainer}>
         <button
           type="button"
           onClick={handleBack}
           disabled={loading}
-          className="px-6 py-3 rounded-lg font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all cursor-pointer"
+          style={styles.backButton}
         >
           Volver
         </button>
@@ -150,15 +157,141 @@ export const CheckoutSummary: React.FC = () => {
           type="button"
           onClick={handlePay}
           disabled={loading}
-          className={`px-6 py-3 rounded-lg font-medium text-white transition-all shadow-sm ${
-            loading
-              ? 'bg-indigo-400 cursor-not-allowed'
-              : 'bg-indigo-600 hover:bg-indigo-700 cursor-pointer'
-          }`}
+          style={{
+            ...styles.primaryButton,
+            backgroundColor: loading ? '#818cf8' : '#4f46e5',
+            cursor: loading ? 'not-allowed' : 'pointer',
+          }}
         >
           {loading ? 'Procesando Pago...' : 'Confirmar y Pagar'}
         </button>
       </div>
     </div>
   );
+};
+
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    maxWidth: '520px',
+    width: '100%',
+    margin: '24px auto',
+    padding: '24px',
+    backgroundColor: '#ffffff',
+    borderRadius: '12px',
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+    textAlign: 'left',
+    boxSizing: 'border-box',
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '20px',
+  },
+  title: {
+    fontSize: '22px',
+    fontWeight: 700,
+    color: '#1a1a1a',
+    margin: 0,
+  },
+  subtitle: {
+    fontSize: '13px',
+    color: '#666666',
+    marginTop: '6px',
+  },
+  errorAlert: {
+    padding: '10px 14px',
+    backgroundColor: '#fdf2f2',
+    border: '1px solid #f8d7da',
+    borderRadius: '8px',
+    color: '#a94442',
+    fontSize: '13px',
+    fontWeight: 500,
+    textAlign: 'center',
+    marginBottom: '16px',
+  },
+  sectionsContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+  },
+  cardBox: {
+    padding: '14px 16px',
+    backgroundColor: '#f9fafb',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+  },
+  sectionLabel: {
+    fontSize: '12px',
+    fontWeight: 600,
+    color: '#6b7280',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    margin: 0,
+    marginBottom: '4px',
+  },
+  rowBetween: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  productName: {
+    fontWeight: 600,
+    color: '#111827',
+    margin: 0,
+  },
+  productDesc: {
+    fontSize: '13px',
+    color: '#4b5563',
+    margin: 0,
+    marginTop: '2px',
+  },
+  productPrice: {
+    fontWeight: 700,
+    color: '#4f46e5',
+    fontSize: '16px',
+  },
+  boldText: {
+    fontWeight: 500,
+    color: '#111827',
+    margin: 0,
+  },
+  mutedText: {
+    fontSize: '13px',
+    color: '#4b5563',
+    margin: 0,
+  },
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: '12px',
+    marginTop: '24px',
+    paddingTop: '16px',
+    borderTop: '1px solid #eaeaea',
+  },
+  backButton: {
+    flex: '1',
+    padding: '12px 16px',
+    borderRadius: '8px',
+    fontWeight: 600,
+    fontSize: '14px',
+    color: '#4b5563',
+    backgroundColor: '#f3f4f6',
+    border: 'none',
+    cursor: 'pointer',
+    textAlign: 'center',
+  },
+  primaryButton: {
+    flex: '2',
+    padding: '12px 16px',
+    borderRadius: '8px',
+    fontWeight: 600,
+    fontSize: '14px',
+    color: '#ffffff',
+    border: 'none',
+    textAlign: 'center',
+  },
 };
