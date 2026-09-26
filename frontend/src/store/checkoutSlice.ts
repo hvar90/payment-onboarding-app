@@ -8,24 +8,27 @@ export interface TransactionResult {
   amountInCents?: number;
   currency?: string;
   customerEmail?: string;
-  [key: string]: unknown; // Permite propiedades adicionales seguras sin usar 'any'
+  [key: string]: unknown;
 }
 
 interface CheckoutState {
-  step: number; // 1: Productos, 2: Pago/Entrega, 3: Resumen, 4: Resultado
+  step: number;
   selectedProductId: string | null;
   customerData: {
     email: string;
     fullName: string;
   } | null;
   cardData: {
+    cardNumber: string;
+    cardHolder: string;
+    expiry: string;
+    cvc: string;
     token: string;
     installments: number;
   } | null;
   transactionResult: TransactionResult | null;
 }
 
-// Cargar estado inicial desde localStorage para cumplir con la resiliencia ante un refresh
 const loadInitialState = (): CheckoutState => {
   try {
     const savedState = localStorage.getItem('wompi_checkout_state');
@@ -62,7 +65,17 @@ export const checkoutSlice = createSlice({
       state.customerData = action.payload;
       localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
     },
-    setCardData: (state, action: PayloadAction<{ token: string; installments: number }>) => {
+    setCardData: (
+      state,
+      action: PayloadAction<{
+        cardNumber: string;
+        cardHolder: string;
+        expiry: string;
+        cvc: string;
+        token: string;
+        installments: number;
+      }>
+    ) => {
       state.cardData = action.payload;
       localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
     },
