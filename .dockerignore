@@ -1,0 +1,11 @@
+# Archivos y carpetas que Docker NO debe copiar dentro de la imagen
+node_modules
+npm-debug.log
+coverage
+dist
+.git
+.gitignore
+.env
+frontend
+README.md
+Dockerfile
