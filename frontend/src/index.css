@@ -1,0 +1,263 @@
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1, h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+/* ==========================================
+   ESTILOS NATIVOS PARA PRODUCT SELECTION
+   ========================================== */
+
+.checkout-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 20px;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.checkout-header p {
+  color: var(--text);
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.loading-state, .error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.error-state {
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  color: #ef4444;
+  margin: 20px auto;
+  max-width: 500px;
+}
+
+.products-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: var(--code-bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: var(--shadow);
+}
+
+.product-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* ESTILOS CORREGIDOS PARA LA TARJETA SELECCIONADA (CONTRASTE ALTO) */
+.product-card.selected {
+  border-color: #a855f7;
+  background: #f3e8ff; /* Fondo lila claro claro */
+}
+
+.product-card.selected .product-info h3 {
+  color: #111827; /* Título en gris muy oscuro / negro */
+}
+
+.product-card.selected .product-info p {
+  color: #4b5563; /* Descripción en gris oscuro legible */
+}
+
+.product-card.selected .product-price {
+  color: #7c3aed; /* Precio en morado intenso */
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 16px;
+}
+
+.product-info h3 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--text-h);
+  font-weight: 600;
+}
+
+.product-info p {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.product-pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  min-width: 100px;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.radio-indicator {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.radio-indicator.checked {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 4px var(--bg);
+}
+
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+}
+
+.primary-btn {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s, background-color 0.2s;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .primary-btn {
+    width: auto;
+  }
+}
+
+.primary-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.primary-btn:not(:disabled):hover {
+  opacity: 0.9;
+}
