@@ -5,17 +5,42 @@ import { ApiAdapter } from '../../infrastructure/gateways/api.adapter';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ProductEntity } from '../../../products/infrastructure/persistence/entities/product.entity';
 import { NotFoundException } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 
 describe('CreateTransactionUseCase', () => {
   let useCase: CreateTransactionUseCase;
   let productRepository: any;
   let transactionRepository: any;
   let apiAdapter: any;
+  let dataSource: any;
+  let queryRunner: any;
 
   beforeEach(async () => {
+    queryRunner = {
+      connect: jest.fn(),
+      startTransaction: jest.fn(),
+      commitTransaction: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      release: jest.fn(),
+      manager: {
+        findOne: jest.fn(),
+        save: jest.fn(),
+      },
+    };
+
+    dataSource = {
+      createQueryRunner: jest.fn().mockReturnValue(queryRunner),
+    };
+
     productRepository = {
       findOne: jest.fn(),
       save: jest.fn(),
+      createQueryBuilder: jest.fn().mockReturnValue({
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValue({ affected: 1 }),
+      }),
     };
 
     transactionRepository = {
@@ -33,6 +58,7 @@ describe('CreateTransactionUseCase', () => {
         { provide: PostgresTransactionRepository, useValue: transactionRepository },
         { provide: ApiAdapter, useValue: apiAdapter },
         { provide: getRepositoryToken(ProductEntity), useValue: productRepository },
+        { provide: DataSource, useValue: dataSource },
       ],
     }).compile();
 
@@ -41,7 +67,7 @@ describe('CreateTransactionUseCase', () => {
 
   it('should successfully create a transaction and update stock when approved', async () => {
     const mockProduct = { id: 'prod-1', price: 100000, stock: 5 };
-    productRepository.findOne.mockResolvedValue(mockProduct);
+    queryRunner.manager.findOne.mockResolvedValue(mockProduct);
 
     const dto = {
       productId: 'prod-1',
@@ -52,12 +78,13 @@ describe('CreateTransactionUseCase', () => {
     const result = await useCase.execute(dto);
 
     expect(result.status).toEqual('APPROVED');
-    expect(productRepository.save).toHaveBeenCalled();
+    expect(queryRunner.commitTransaction).toHaveBeenCalled();
     expect(transactionRepository.updateStatus).toHaveBeenCalled();
+    expect(productRepository.createQueryBuilder).toHaveBeenCalled();
   });
 
   it('should throw NotFoundException if product does not exist or out of stock', async () => {
-    productRepository.findOne.mockResolvedValue(null);
+    queryRunner.manager.findOne.mockResolvedValue(null);
 
     const dto = {
       productId: 'invalid-id',
@@ -66,5 +93,6 @@ describe('CreateTransactionUseCase', () => {
     };
 
     await expect(useCase.execute(dto)).rejects.toThrow(NotFoundException);
+    expect(queryRunner.rollbackTransaction).toHaveBeenCalled();
   });
 });
