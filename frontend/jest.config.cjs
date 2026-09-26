@@ -1,11 +1,13 @@
 module.exports = {
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/default-esm', // <--- Obligatorio para proyectos con "type": "module"
   testEnvironment: 'jest-environment-jsdom',
+  injectGlobals: true, // <--- Evita el error "jest is not defined"
   transform: {
     '^.+\\.(ts|tsx)$': [
       'ts-jest',
       {
-        tsconfig: '<rootDir>/tsconfig.app.json', 
+        useESM: true, // <--- Le dice a ts-jest que compile a módulos ES (elimina el error de 'exports')
+        tsconfig: '<rootDir>/tsconfig.app.json',
         isolatedModules: true,
       },
     ],
