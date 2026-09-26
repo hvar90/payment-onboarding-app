@@ -1,13 +1,20 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from './store/store';
+import { resetCheckout } from './store/checkoutSlice';
 import { ProductSelection } from './components/ProductSelection';
 import { CustomerPaymentForm } from './components/CustomerPaymentForm';
 import { CheckoutSummary } from './components/CheckoutSummary';
 import './App.css';
 
 function App() {
+  const dispatch = useDispatch();
   const step = useSelector((state: RootState) => state.checkout.step);
   const transactionResult = useSelector((state: RootState) => state.checkout.transactionResult);
+
+  const handleReturnToStore = () => {
+    // Esto ejecuta el Paso 5: Regresa a la página de productos limpiando el estado temporal
+    dispatch(resetCheckout());
+  };
 
   return (
     <main className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -29,10 +36,10 @@ function App() {
             <p><strong>Referencia:</strong> {transactionResult?.reference}</p>
           </div>
           <button
-            onClick={() => window.location.reload()}
+            onClick={handleReturnToStore}
             className="px-6 py-3 rounded-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-all cursor-pointer"
           >
-            Realizar otra compra
+            Volver al inicio (Ver stock actualizado)
           </button>
         </div>
       )}
