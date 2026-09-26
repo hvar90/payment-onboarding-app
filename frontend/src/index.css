@@ -161,9 +161,22 @@ p {
   transform: translateY(-2px);
 }
 
+/* ESTILOS CORREGIDOS PARA LA TARJETA SELECCIONADA (CONTRASTE ALTO) */
 .product-card.selected {
-  border-color: var(--accent);
-  background: var(--accent-bg);
+  border-color: #a855f7;
+  background: #f3e8ff; /* Fondo lila claro claro */
+}
+
+.product-card.selected .product-info h3 {
+  color: #111827; /* Título en gris muy oscuro / negro */
+}
+
+.product-card.selected .product-info p {
+  color: #4b5563; /* Descripción en gris oscuro legible */
+}
+
+.product-card.selected .product-price {
+  color: #7c3aed; /* Precio en morado intenso */
 }
 
 .product-info {
