@@ -1,4 +1,9 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('customers')
 export class CustomerEntity {
@@ -10,9 +15,6 @@ export class CustomerEntity {
 
   @Column({ type: 'varchar', length: 150, unique: true })
   email: string;
-
-  @Column({ type: 'varchar', length: 50 })
-  phone: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -23,7 +23,6 @@ export class FindOrCreateCustomerUseCase {
         Date.now().toString(),
         params.name,
         params.email,
-        params.phone,
         new Date(),
       );
       customer = await this.customerRepository.save(customer);

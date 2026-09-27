@@ -21,7 +21,6 @@ describe('FindOrCreateCustomerUseCase', () => {
       '1',
       'Heberth Vargas',
       'test@example.com',
-      '3001234567',
       new Date(),
     );
 
@@ -51,7 +50,6 @@ describe('FindOrCreateCustomerUseCase', () => {
     expect(result).toBeDefined();
     expect(result.name).toBe('New User');
     expect(result.email).toBe('new@example.com');
-    expect(result.phone).toBe('3009876543');
     expect(customerRepositoryMock.save).toHaveBeenCalledTimes(1);
   });
 });

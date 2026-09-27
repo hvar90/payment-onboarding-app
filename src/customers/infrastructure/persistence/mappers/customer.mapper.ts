@@ -8,7 +8,6 @@ export class CustomerMapper {
       entity.id,
       entity.name,
       entity.email,
-      entity.phone,
       entity.createdAt,
     );
   }
@@ -18,7 +17,6 @@ export class CustomerMapper {
     entity.id = model.id;
     entity.name = model.name;
     entity.email = model.email;
-    entity.phone = model.phone;
     entity.createdAt = model.createdAt ?? new Date();
     return entity;
   }
