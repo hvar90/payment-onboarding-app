@@ -13,7 +13,7 @@ interface Product {
 
 export const CheckoutSummary: React.FC = () => {
   const dispatch = useDispatch();
-  const { selectedProductId, customerData, cardData } = useSelector(
+  const { selectedProductId, customerData, cardData, deliveryData } = useSelector(
     (state: RootState) => state.checkout,
   );
 
@@ -45,7 +45,7 @@ export const CheckoutSummary: React.FC = () => {
     setError(null);
 
     try {
-      // Estructura exacta que exige el CreateTransactionDto del backend
+      // Estructura completa alineada estrictamente al CreateTransactionDto del backend
       const payload = {
         productId: selectedProductId,
         customerData: {
@@ -53,8 +53,16 @@ export const CheckoutSummary: React.FC = () => {
           fullName: customerData.fullName,
         },
         cardData: {
+          cardNumber: cardData.cardNumber,
+          cardHolder: cardData.cardHolder,
+          expiry: cardData.expiry,
+          cvc: cardData.cvc,
           token: cardData.token,
-          installments: cardData.installments,
+          installments: Number(cardData.installments) || 1,
+        },
+        deliveryData: {
+          address: deliveryData?.address || 'Calle Falsa 123',
+          city: deliveryData?.city || 'Cali',
         },
       };
 
@@ -133,10 +141,17 @@ export const CheckoutSummary: React.FC = () => {
           <p style={styles.mutedText}>{customerData?.email}</p>
         </div>
 
+        {/* Detalle de Envío */}
+        <div style={styles.cardBox}>
+          <h3 style={styles.sectionLabel}>Datos de Envío</h3>
+          <p style={styles.boldText}>Dirección: {deliveryData?.address || 'No especificada'}</p>
+          <p style={styles.mutedText}>Ciudad: {deliveryData?.city || 'No especificada'}</p>
+        </div>
+
         {/* Detalle del Pago */}
         <div style={styles.cardBox}>
           <h3 style={styles.sectionLabel}>Método de Pago</h3>
-          <p style={styles.boldText}>Tarjeta de Crédito / Débito</p>
+          <p style={styles.boldText}>Tarjeta terminada en {cardData?.cardNumber ? cardData.cardNumber.slice(-4) : '****'}</p>
           <p style={styles.mutedText}>
             Cuotas seleccionadas: {cardData?.installments}
           </p>

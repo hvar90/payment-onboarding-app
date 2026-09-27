@@ -26,6 +26,10 @@ interface CheckoutState {
     token: string;
     installments: number;
   } | null;
+  deliveryData: {
+    address: string;
+    city: string;
+  } | null;
   transactionResult: TransactionResult | null;
 }
 
@@ -43,6 +47,7 @@ const loadInitialState = (): CheckoutState => {
     selectedProductId: null,
     customerData: null,
     cardData: null,
+    deliveryData: null,
     transactionResult: null,
   };
 };
@@ -79,6 +84,10 @@ export const checkoutSlice = createSlice({
       state.cardData = action.payload;
       localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
     },
+    setDeliveryData: (state, action: PayloadAction<{ address: string; city: string }>) => {
+      state.deliveryData = action.payload;
+      localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
+    },
     setTransactionResult: (state, action: PayloadAction<TransactionResult>) => {
       state.transactionResult = action.payload;
       localStorage.setItem('wompi_checkout_state', JSON.stringify(state));
@@ -88,6 +97,7 @@ export const checkoutSlice = createSlice({
       state.selectedProductId = null;
       state.customerData = null;
       state.cardData = null;
+      state.deliveryData = null;
       state.transactionResult = null;
       localStorage.removeItem('wompi_checkout_state');
     },
@@ -99,6 +109,7 @@ export const {
   setSelectedProduct,
   setCustomerData,
   setCardData,
+  setDeliveryData,
   setTransactionResult,
   resetCheckout,
 } = checkoutSlice.actions;

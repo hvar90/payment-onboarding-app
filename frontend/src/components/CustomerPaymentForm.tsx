@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCustomerData, setCardData, setStep } from '../store/checkoutSlice';
+import { setCustomerData, setCardData, setDeliveryData, setStep } from '../store/checkoutSlice';
 import type { RootState } from '../store/store.ts';
 
 export const CustomerPaymentForm: React.FC = () => {
   const dispatch = useDispatch();
   const currentCustomer = useSelector((state: RootState) => state.checkout.customerData);
   const currentCard = useSelector((state: RootState) => state.checkout.cardData);
+  const currentDelivery = useSelector((state: RootState) => state.checkout.deliveryData);
 
   const [fullName, setFullName] = useState(currentCustomer?.fullName || '');
   const [email, setEmail] = useState(currentCustomer?.email || '');
@@ -16,6 +17,9 @@ export const CustomerPaymentForm: React.FC = () => {
   const [expiry, setExpiry] = useState(currentCard?.expiry || '');
   const [cvc, setCvc] = useState(currentCard?.cvc || '');
   const [installments, setInstallments] = useState(currentCard?.installments || 1);
+
+  const [address, setAddress] = useState(currentDelivery?.address || '');
+  const [city, setCity] = useState(currentDelivery?.city || '');
 
   const [error, setError] = useState<string | null>(null);
 
@@ -39,19 +43,13 @@ export const CustomerPaymentForm: React.FC = () => {
     dispatch(setCustomerData({ fullName: sanitized, email }));
   };
 
-  // Sanitiza el email: solo caracteres permitidos, máximo una arroba y evita puntos dobles seguidos
   const handleEmailChange = (value: string) => {
     let sanitized = value.replace(/[^a-zA-Z0-9._@+-]/g, '');
-    
-    // Controla que solo pueda haber un '@'
     const parts = sanitized.split('@');
     if (parts.length > 2) {
       sanitized = parts[0] + '@' + parts.slice(1).join('');
     }
-
-    // Evita puntos consecutivos (ej: '..')
     sanitized = sanitized.replace(/\.\./g, '.');
-
     setEmail(sanitized);
     dispatch(setCustomerData({ fullName, email: sanitized }));
   };
@@ -70,20 +68,17 @@ export const CustomerPaymentForm: React.FC = () => {
 
   const handleExpiryChange = (value: string) => {
     const digitsOnly = value.replace(/\D/g, '').slice(0, 4);
-
     if (digitsOnly.length >= 1 && parseInt(digitsOnly[0], 10) > 1) return;
     if (digitsOnly.length >= 2) {
       const monthNum = parseInt(digitsOnly.slice(0, 2), 10);
       if (monthNum < 1 || monthNum > 12) return;
     }
-
     let formatted = digitsOnly;
     if (digitsOnly.length >= 3) {
       formatted = `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(2)}`;
     } else if (digitsOnly.length >= 2) {
       formatted = `${digitsOnly}/`;
     }
-
     setExpiry(formatted);
     updateCardInRedux(cardNumber, cardHolder, formatted, cvc, installments);
   };
@@ -99,7 +94,20 @@ export const CustomerPaymentForm: React.FC = () => {
     updateCardInRedux(cardNumber, cardHolder, expiry, cvc, value);
   };
 
-  // Validación robusta de correo: exige usuario, arroba, dominio válido y extensión de al menos 2 letras
+  // Validación en tiempo real para Ciudad: Solo letras, espacios y acentos (sin números)
+  const handleCityChange = (value: string) => {
+    const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+    setCity(sanitized);
+    dispatch(setDeliveryData({ address, city: sanitized }));
+  };
+
+  // Validación en tiempo real para Dirección: Letras, números, espacios y caracteres comunes de nomenclatura (#, -, /, °, ., ,)
+  const handleAddressChange = (value: string) => {
+    const sanitized = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ#\-/°.,\s]/g, '');
+    setAddress(sanitized);
+    dispatch(setDeliveryData({ address: sanitized, city }));
+  };
+
   const validateEmail = (emailStr: string) => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(emailStr.trim());
@@ -110,14 +118,11 @@ export const CustomerPaymentForm: React.FC = () => {
     const [monthStr, yearStr] = expiryStr.split('/');
     const month = parseInt(monthStr, 10);
     const year = parseInt(`20${yearStr}`, 10);
-
     if (isNaN(month) || month < 1 || month > 12) return false;
     if (isNaN(year)) return false;
-
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth() + 1;
-
     if (year < currentYear || (year === currentYear && month < currentMonth)) {
       return false;
     }
@@ -130,7 +135,15 @@ export const CustomerPaymentForm: React.FC = () => {
       return false;
     }
     if (!validateEmail(email)) {
-      setError('Por favor ingresa un correo electrónico válido (ejemplo: usuario@dominio.com).');
+      setError('Por favor ingresa un correo electrónico válido.');
+      return false;
+    }
+    if (!address.trim() || address.trim().length < 5) {
+      setError('Por favor ingresa una dirección de envío válida (mínimo 5 caracteres).');
+      return false;
+    }
+    if (!city.trim() || city.trim().length < 2) {
+      setError('Por favor ingresa una ciudad válida.');
       return false;
     }
     if (cardNumber.length < 13 || cardNumber.length > 16) {
@@ -142,7 +155,7 @@ export const CustomerPaymentForm: React.FC = () => {
       return false;
     }
     if (!validateExpiryDate(expiry)) {
-      setError('Fecha de expiración inválida (Mes entre 01 y 12, tarjeta vigente).');
+      setError('Fecha de expiración inválida o tarjeta vencida.');
       return false;
     }
     if (cvc.length < 3) {
@@ -152,20 +165,21 @@ export const CustomerPaymentForm: React.FC = () => {
 
     setError(null);
     dispatch(setCustomerData({ fullName, email }));
+    dispatch(setDeliveryData({ address, city }));
     updateCardInRedux(cardNumber, cardHolder, expiry, cvc, installments);
-    dispatch(setStep(3));
+    dispatch(setStep(3)); // Cambia al paso de Resumen/Confirmación de pago
     return true;
   };
 
   const handleGoBack = () => {
-    dispatch(setStep(1));
+    dispatch(setStep(1)); // Vuelve al paso anterior (selección de producto)
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h2 style={styles.title}>Datos de Facturación y Pago</h2>
-        <p style={styles.subtitle}>Ingresa tu información personal y los detalles de tu tarjeta</p>
+        <h2 style={styles.title}>Datos de Cliente, Envío y Pago</h2>
+        <p style={styles.subtitle}>Completa tu información para procesar la transacción</p>
       </div>
 
       {error && <div style={styles.errorAlert}>⚠️ {error}</div>}
@@ -174,7 +188,6 @@ export const CustomerPaymentForm: React.FC = () => {
         {/* Sección 1: Información del Cliente */}
         <div style={styles.sectionGroup}>
           <h3 style={styles.sectionTitle}>1. Información del Cliente</h3>
-          
           <div style={styles.inputGroup}>
             <label style={styles.label}>Nombre Completo</label>
             <input
@@ -185,7 +198,6 @@ export const CustomerPaymentForm: React.FC = () => {
               style={styles.input}
             />
           </div>
-
           <div style={styles.inputGroup}>
             <label style={styles.label}>Correo Electrónico</label>
             <input
@@ -198,10 +210,34 @@ export const CustomerPaymentForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Sección 2: Datos de la Tarjeta */}
+        {/* Sección 2: Datos de Envío (Delivery) */}
         <div style={styles.sectionGroup}>
-          <h3 style={styles.sectionTitle}>2. Datos de la Tarjeta</h3>
+          <h3 style={styles.sectionTitle}>2. Dirección de Envío</h3>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Dirección</label>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => handleAddressChange(e.target.value)}
+              placeholder="Ej. Calle 100 # 50-20"
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>Ciudad</label>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => handleCityChange(e.target.value)}
+              placeholder="Ej. Cali (Solo letras)"
+              style={styles.input}
+            />
+          </div>
+        </div>
 
+        {/* Sección 3: Datos de la Tarjeta */}
+        <div style={styles.sectionGroup}>
+          <h3 style={styles.sectionTitle}>3. Datos de la Tarjeta</h3>
           <div style={styles.inputGroup}>
             <label style={styles.label}>Número de Tarjeta</label>
             <input
@@ -214,7 +250,6 @@ export const CustomerPaymentForm: React.FC = () => {
               style={{ ...styles.input, fontFamily: 'monospace' }}
             />
           </div>
-
           <div style={styles.inputGroup}>
             <label style={styles.label}>Titular de la Tarjeta</label>
             <input
@@ -225,7 +260,6 @@ export const CustomerPaymentForm: React.FC = () => {
               style={{ ...styles.input, textTransform: 'uppercase' }}
             />
           </div>
-
           <div style={styles.rowGrid}>
             <div style={styles.inputGroup}>
               <label style={styles.label}>Expiración (MM/AA)</label>
@@ -252,7 +286,6 @@ export const CustomerPaymentForm: React.FC = () => {
               />
             </div>
           </div>
-
           <div style={styles.inputGroup}>
             <label style={styles.label}>Cuotas</label>
             <select
@@ -269,13 +302,13 @@ export const CustomerPaymentForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Botones de Navegación con Flexbox Puro */}
+        {/* Botones de Navegación */}
         <div style={styles.buttonContainer}>
           <button type="button" onClick={handleGoBack} style={styles.backButton}>
             Volver
           </button>
           <button type="button" onClick={handleProceedToSummary} style={styles.primaryButton}>
-            Continuar con el Pago (Wompi)
+            Continuar con el Pago
           </button>
         </div>
       </div>
