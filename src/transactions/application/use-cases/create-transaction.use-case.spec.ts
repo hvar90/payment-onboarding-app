@@ -24,12 +24,17 @@ describe('CreateTransactionUseCase', () => {
       release: jest.fn(),
       manager: {
         findOne: jest.fn(),
-        save: jest.fn(),
+        create: jest.fn().mockImplementation((entity, dto) => dto),
+        save: jest.fn().mockImplementation((entityOrObject, val) => Promise.resolve(val || entityOrObject)),
+        update: jest.fn().mockResolvedValue({ affected: 1 }),
       },
     };
 
     dataSource = {
       createQueryRunner: jest.fn().mockReturnValue(queryRunner),
+      manager: {
+        update: jest.fn().mockResolvedValue({ affected: 1 }),
+      },
     };
 
     productRepository = {
@@ -45,7 +50,7 @@ describe('CreateTransactionUseCase', () => {
 
     transactionRepository = {
       save: jest.fn().mockResolvedValue({ id: '1', reference: 'TX-123' }),
-      updateStatus: jest.fn(),
+      updateStatus: jest.fn().mockResolvedValue(undefined),
     };
 
     apiAdapter = {
@@ -67,12 +72,16 @@ describe('CreateTransactionUseCase', () => {
 
   it('should successfully create a transaction and update stock when approved', async () => {
     const mockProduct = { id: 'prod-1', price: 100000, stock: 5 };
-    queryRunner.manager.findOne.mockResolvedValue(mockProduct);
+    
+    queryRunner.manager.findOne
+      .mockResolvedValueOnce(mockProduct)
+      .mockResolvedValueOnce(null);
 
     const dto = {
       productId: 'prod-1',
-      customerData: { email: 'test@example.co', name: 'Heberth' },
-      cardData: { token: 'tok_test_123' },
+      customerData: { email: 'test@example.co', fullName: 'Heberth' },
+      cardData: { token: 'tok_test_123', installments: 1 },
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' }, // 👈 Agregado para cumplir con el DTO
     };
 
     const result = await useCase.execute(dto);
@@ -84,12 +93,13 @@ describe('CreateTransactionUseCase', () => {
   });
 
   it('should throw NotFoundException if product does not exist or out of stock', async () => {
-    queryRunner.manager.findOne.mockResolvedValue(null);
+    queryRunner.manager.findOne.mockResolvedValueOnce(null);
 
     const dto = {
       productId: 'invalid-id',
-      customerData: { email: 'test@wompi.co', name: 'Heberth' },
-      cardData: { token: 'tok_test_123' },
+      customerData: { email: 'test@wompi.co', fullName: 'Heberth' },
+      cardData: { token: 'tok_test_123', installments: 1 },
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' }, // 👈 Agregado para cumplir con el DTO
     };
 
     await expect(useCase.execute(dto)).rejects.toThrow(NotFoundException);

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from 'typeorm';
+import { DeliveryEntity } from '../../../../deliveries/infrastructure/persistence/entities/delivery.entity'; 
 
 @Entity('transactions')
 export class TransactionEntity {
@@ -17,18 +18,15 @@ export class TransactionEntity {
   @Column({ type: 'uuid', name: 'product_id' })
   productId: string;
 
-  @Column({ type: 'jsonb', nullable: true })
-  customerData: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-    city: string;
-    cardNumber: string;
-  };
+  @Column({ type: 'uuid', nullable: true, name: 'customer_id' })
+  customerId: string; 
 
   @Column({ type: 'varchar', nullable: true, name: 'gateway_transaction_id' })
   gatewayTransactionId: string;
+
+  @OneToOne(() => DeliveryEntity, (delivery) => delivery.transaction, { cascade: true, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'transaction_id' }) // Opcional, pero conecta formalmente la FK
+  delivery: DeliveryEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

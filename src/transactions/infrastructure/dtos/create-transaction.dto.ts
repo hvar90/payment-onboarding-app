@@ -1,8 +1,8 @@
-import { IsString, IsEmail, IsNotEmpty, IsObject, ValidateNested, IsInt, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsObject, ValidateNested, Min, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class CustomerDataDto {
-  @IsEmail({}, { message: 'El correo electrónico debe ser válido' })
+  @IsString()
   @IsNotEmpty()
   email: string;
 
@@ -14,12 +14,37 @@ class CustomerDataDto {
 class CardDataDto {
   @IsString()
   @IsNotEmpty()
-  token: string; // Token de la tarjeta de crédito o método de pago
+  cardNumber: string;
 
-  @IsInt()
+  @IsString()
+  @IsNotEmpty()
+  cardHolder: string;
+
+  @IsString()
+  @IsNotEmpty()
+  expiry: string;
+
+  @IsString()
+  @IsNotEmpty()
+  cvc: string;
+
+  @IsString()
+  @IsNotEmpty()
+  token: string;
+
+  @IsNumber()
   @Min(1)
-  @Max(36)
-  installments: number; // Número de cuotas permitidas
+  installments: number;
+}
+
+class DeliveryDataDto {
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
 }
 
 export class CreateTransactionDto {
@@ -36,4 +61,9 @@ export class CreateTransactionDto {
   @ValidateNested()
   @Type(() => CardDataDto)
   cardData: CardDataDto;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DeliveryDataDto)
+  deliveryData: DeliveryDataDto;
 }
