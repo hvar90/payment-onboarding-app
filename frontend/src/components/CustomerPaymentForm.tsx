@@ -229,7 +229,7 @@ export const CustomerPaymentForm: React.FC = () => {
               type="text"
               value={city}
               onChange={(e) => handleCityChange(e.target.value)}
-              placeholder="Ej. Cali (Solo letras)"
+              placeholder="Ej. Cali"
               style={styles.input}
             />
           </div>

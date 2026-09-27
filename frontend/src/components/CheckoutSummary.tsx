@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setStep, setTransactionResult } from '../store/checkoutSlice';
 import type { RootState } from '../store/store.ts';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 interface Product {
   id: string;
   name: string;
@@ -23,7 +24,7 @@ export const CheckoutSummary: React.FC = () => {
 
   useEffect(() => {
     if (selectedProductId) {
-      fetch('http://localhost:3000/products')
+      fetch(`${API_URL}/products`)
         .then((res) => res.json())
         .then((data: Product[]) => {
           const found = data.find((p) => p.id === selectedProductId);
@@ -66,7 +67,7 @@ export const CheckoutSummary: React.FC = () => {
         },
       };
 
-      const response = await fetch('http://localhost:3000/transactions', {
+      const response = await fetch(`${API_URL}/transactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

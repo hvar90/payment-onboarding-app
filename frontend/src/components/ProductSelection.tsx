@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedProduct, setStep } from '../store/checkoutSlice';
 import type { RootState } from '../store/store.ts';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 interface Product {
   id: string;
   name: string;
@@ -22,7 +23,7 @@ export const ProductSelection: React.FC = () => {
 
   // Función para cargar los productos (permite volver a consultarlos si es necesario)
   const fetchProducts = () => {
-    fetch('http://localhost:3000/products')
+    fetch(`${API_URL}/products`)
       .then((res) => {
         if (!res.ok) throw new Error('Error al cargar los productos');
         return res.json();
