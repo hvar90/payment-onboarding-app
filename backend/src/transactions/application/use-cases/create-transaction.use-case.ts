@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { ProductEntity } from '../../../products/infrastructure/persistence/entities/product.entity';
 import { CustomerEntity } from '../../../customers/infrastructure/persistence/entities/customer.entity';
-import { DeliveryEntity } from '../../../deliveries/infrastructure/persistence/entities/delivery.entity'; // 👈 Ajusta la ruta a tu entidad de delivery
+import { DeliveryEntity } from '../../../deliveries/infrastructure/persistence/entities/delivery.entity'; 
 
 @Injectable()
 export class CreateTransactionUseCase {
