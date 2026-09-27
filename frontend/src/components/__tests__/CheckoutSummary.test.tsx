@@ -29,6 +29,10 @@ const renderWithStore = (initialState = {}) => {
           token: 'tok_test_123',
           installments: 1,
         },
+        deliveryData: {
+          address: 'Calle Falsa 123',
+          city: 'Cali',
+        },
         transactionResult: null,
         ...initialState,
       },
@@ -66,6 +70,7 @@ describe('CheckoutSummary Component', () => {
 
     renderWithStore();
 
+    // Esperar a que el producto cargue de forma asíncrona mediante useEffect
     expect(await screen.findByText('TalkFi Premium')).toBeInTheDocument();
     expect(screen.getByText('Suscripción anual')).toBeInTheDocument();
     expect(screen.getByText('Heberth Vargas')).toBeInTheDocument();
@@ -109,6 +114,7 @@ describe('CheckoutSummary Component', () => {
   });
 
   test('processes payment successfully and advances to step 4', async () => {
+    // 1. Mock para la carga inicial del producto en el useEffect
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => [
@@ -122,6 +128,7 @@ describe('CheckoutSummary Component', () => {
       ],
     });
 
+    // 2. Mock para la petición POST de la transacción (handlePay)
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -133,6 +140,7 @@ describe('CheckoutSummary Component', () => {
 
     const { store } = renderWithStore();
 
+    // Esperar a que cargue el producto antes de hacer clic en pagar
     await screen.findByText('TalkFi Premium');
 
     const payButton = screen.getByRole('button', { name: /confirmar y pagar/i });
@@ -149,6 +157,7 @@ describe('CheckoutSummary Component', () => {
   });
 
   test('handles payment failure and shows error message', async () => {
+    // 1. Mock para la carga inicial del producto en el useEffect
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => [
@@ -162,6 +171,7 @@ describe('CheckoutSummary Component', () => {
       ],
     });
 
+    // 2. Mock para el error en la petición POST de pago
     mockFetch.mockResolvedValueOnce({
       ok: false,
       json: async () => ({

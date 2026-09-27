@@ -13,6 +13,7 @@ const renderWithRedux = (initialState = {}) => {
         selectedProductId: 'prod-1',
         customerData: null,
         cardData: null,
+        deliveryData: null,
         transactionResult: null,
         ...initialState,
       },
@@ -25,6 +26,7 @@ describe('CustomerPaymentForm Component', () => {
   test('renders form inputs correctly with preloaded state', () => {
     renderWithRedux({
       customerData: { fullName: 'Heberth Vargas', email: 'heberth@example.com' },
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' },
       cardData: {
         cardNumber: '4000000000000000',
         cardHolder: 'HEBERTH VARGAS',
@@ -36,12 +38,14 @@ describe('CustomerPaymentForm Component', () => {
     });
     expect(screen.getByDisplayValue('Heberth Vargas')).toBeInTheDocument();
     expect(screen.getByDisplayValue('heberth@example.com')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Calle 100 # 50-20')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Cali')).toBeInTheDocument();
     expect(screen.getByDisplayValue('4000000000000000')).toBeInTheDocument();
   });
 
   test('shows validation error when submitting empty form', () => {
     renderWithRedux();
-    const submitButton = screen.getByText('Continuar con el Pago (Wompi)');
+    const submitButton = screen.getByText('Continuar con el Pago');
     
     fireEvent.click(submitButton);
     
@@ -53,14 +57,33 @@ describe('CustomerPaymentForm Component', () => {
     
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'correo-invalido' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
     fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '123' } });
 
-    fireEvent.click(screen.getByText('Continuar con el Pago (Wompi)'));
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
 
     expect(screen.getByText(/correo electrónico válido/i)).toBeInTheDocument();
+  });
+
+  test('validates address length (less than 5 characters)', () => {
+    renderWithRedux();
+    
+    fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
+    fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Cal' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
+    fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
+    fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
+    fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '123' } });
+
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
+
+    expect(screen.getByText(/dirección de envío válida/i)).toBeInTheDocument();
   });
 
   test('validates card number length (less than 13 digits)', () => {
@@ -68,12 +91,14 @@ describe('CustomerPaymentForm Component', () => {
     
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000123' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
     fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '123' } });
 
-    fireEvent.click(screen.getByText('Continuar con el Pago (Wompi)'));
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
 
     expect(screen.getByText(/El número de tarjeta debe tener entre 13 y 16 dígitos/i)).toBeInTheDocument();
   });
@@ -83,12 +108,14 @@ describe('CustomerPaymentForm Component', () => {
     
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: '   ' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
     fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '123' } });
 
-    fireEvent.click(screen.getByText('Continuar con el Pago (Wompi)'));
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
 
     expect(screen.getByText(/Por favor ingresa el titular de la tarjeta/i)).toBeInTheDocument();
   });
@@ -98,12 +125,14 @@ describe('CustomerPaymentForm Component', () => {
     
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '01/20' } });
     fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '123' } });
 
-    fireEvent.click(screen.getByText('Continuar con el Pago (Wompi)'));
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
 
     expect(screen.getByText(/Fecha de expiración inválida/i)).toBeInTheDocument();
   });
@@ -113,12 +142,14 @@ describe('CustomerPaymentForm Component', () => {
     
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
     fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '12' } });
 
-    fireEvent.click(screen.getByText('Continuar con el Pago (Wompi)'));
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
 
     expect(screen.getByText(/El código CVC\/CVV debe tener al menos 3 dígitos/i)).toBeInTheDocument();
   });
@@ -128,6 +159,7 @@ describe('CustomerPaymentForm Component', () => {
 
     const fullNameInput = screen.getByPlaceholderText('Ej. Heberth Vargas');
     const emailInput = screen.getByPlaceholderText('correo@ejemplo.com');
+    const cityInput = screen.getByPlaceholderText('Ej. Cali (Solo letras)');
     const expiryInput = screen.getByPlaceholderText('MM/AA');
     const cvcInput = screen.getByPlaceholderText('123');
 
@@ -136,6 +168,9 @@ describe('CustomerPaymentForm Component', () => {
 
     fireEvent.change(emailInput, { target: { value: 'test@@example..com' } });
     expect(emailInput).toHaveValue('test@example.com');
+
+    fireEvent.change(cityInput, { target: { value: 'Cali 76000!' } });
+    expect(cityInput).toHaveValue('Cali ');
 
     fireEvent.change(expiryInput, { target: { value: '25/28' } });
     fireEvent.change(expiryInput, { target: { value: '1328' } });
@@ -160,12 +195,14 @@ describe('CustomerPaymentForm Component', () => {
 
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 100 # 50-20' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH VARGAS' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
     fireEvent.change(screen.getByPlaceholderText('123'), { target: { value: '123' } });
 
-    fireEvent.click(screen.getByText('Continuar con el Pago (Wompi)'));
+    fireEvent.click(screen.getByText('Continuar con el Pago'));
 
     expect(store.getState().checkout.step).toBe(3);
   });

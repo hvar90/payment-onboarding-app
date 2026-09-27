@@ -3,6 +3,7 @@ import reducer, {
   setSelectedProduct,
   setCustomerData,
   setCardData,
+  setDeliveryData,
   setTransactionResult,
   resetCheckout,
 } from '../checkoutSlice';
@@ -13,6 +14,7 @@ describe('checkoutSlice reducer', () => {
     selectedProductId: null,
     customerData: null,
     cardData: null,
+    deliveryData: null,
     transactionResult: null,
   };
 
@@ -31,6 +33,7 @@ describe('checkoutSlice reducer', () => {
       selectedProductId: 'prod_999',
       customerData: { email: 'saved@example.com', fullName: 'Saved User' },
       cardData: null,
+      deliveryData: { address: 'Calle 10', city: 'Cali' },
       transactionResult: null,
     };
     localStorage.setItem('wompi_checkout_state', JSON.stringify(savedState));
@@ -81,6 +84,12 @@ describe('checkoutSlice reducer', () => {
     expect(nextState.cardData).toEqual(card);
   });
 
+  test('should handle setDeliveryData', () => {
+    const delivery = { address: 'Calle Falsa 123', city: 'Cali' };
+    const nextState = reducer(initialState, setDeliveryData(delivery));
+    expect(nextState.deliveryData).toEqual(delivery);
+  });
+
   test('should handle setTransactionResult', () => {
     const result = { id: 'tx_1', status: 'APPROVED' };
     const nextState = reducer(initialState, setTransactionResult(result));
@@ -93,6 +102,7 @@ describe('checkoutSlice reducer', () => {
       selectedProductId: 'prod_123',
       customerData: { email: 'a@a.com', fullName: 'A' },
       cardData: { cardNumber: '1234', cardHolder: 'A', expiry: '12/28', cvc: '123', token: 't', installments: 1 },
+      deliveryData: { address: 'Calle 10', city: 'Cali' },
       transactionResult: { id: '1' },
     };
     localStorage.setItem('wompi_checkout_state', JSON.stringify(modifiedState));
