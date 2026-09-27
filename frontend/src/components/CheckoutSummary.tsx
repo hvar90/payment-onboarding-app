@@ -4,6 +4,7 @@ import { setStep, setTransactionResult } from '../store/checkoutSlice';
 import type { RootState } from '../store/store.ts';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 interface Product {
   id: string;
   name: string;
@@ -22,6 +23,10 @@ export const CheckoutSummary: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Tarifas fijas exigidas por la regla de negocio de la prueba técnica
+  const BASE_FEE = 2000;
+  const DELIVERY_FEE = 5000;
+
   useEffect(() => {
     if (selectedProductId) {
       fetch(`${API_URL}/products`)
@@ -36,6 +41,9 @@ export const CheckoutSummary: React.FC = () => {
     }
   }, [selectedProductId]);
 
+  const productPrice = product ? Number(product.price)/ 100 : 0;
+  const totalAmount = productPrice + BASE_FEE + DELIVERY_FEE;
+
   const handlePay = async () => {
     if (!product || !selectedProductId || !customerData || !cardData) {
       setError('Faltan datos en la orden para procesar el pago.');
@@ -46,7 +54,6 @@ export const CheckoutSummary: React.FC = () => {
     setError(null);
 
     try {
-      // Estructura completa alineada estrictamente al CreateTransactionDto del backend
       const payload = {
         productId: selectedProductId,
         customerData: {
@@ -110,7 +117,7 @@ export const CheckoutSummary: React.FC = () => {
       <div style={styles.header}>
         <h2 style={styles.title}>Resumen de tu Orden</h2>
         <p style={styles.subtitle}>
-          Verifica los datos antes de confirmar el pago
+          Verifica los datos y costos antes de confirmar el pago
         </p>
       </div>
 
@@ -126,9 +133,6 @@ export const CheckoutSummary: React.FC = () => {
                 <p style={styles.productName}>{product.name}</p>
                 <p style={styles.productDesc}>{product.description}</p>
               </div>
-              <span style={styles.productPrice}>
-                ${(product.price / 100).toLocaleString()} {product.currency}
-              </span>
             </div>
           ) : (
             <p style={styles.mutedText}>Cargando producto...</p>
@@ -149,13 +153,46 @@ export const CheckoutSummary: React.FC = () => {
           <p style={styles.mutedText}>Ciudad: {deliveryData?.city || 'No especificada'}</p>
         </div>
 
-        {/* Detalle del Pago */}
+        {/* Detalle del Método de Pago */}
         <div style={styles.cardBox}>
           <h3 style={styles.sectionLabel}>Método de Pago</h3>
-          <p style={styles.boldText}>Tarjeta terminada en {cardData?.cardNumber ? cardData.cardNumber.slice(-4) : '****'}</p>
-          <p style={styles.mutedText}>
-            Cuotas seleccionadas: {cardData?.installments}
+          <p style={styles.boldText}>
+            Tarjeta terminada en {cardData?.cardNumber ? cardData.cardNumber.slice(-4) : '****'}
           </p>
+          <p style={styles.mutedText}>
+            Cuotas seleccionadas: {cardData?.installments || 1}
+          </p>
+        </div>
+
+        {/* Resumen de Costos Exigido por la Prueba */}
+        <div style={styles.summaryCardBox}>
+          <h3 style={styles.sectionLabel}>Desglose de Pago</h3>
+          
+          <div style={styles.rowBetween}>
+            <span style={styles.mutedText}>Precio del Producto:</span>
+            <span style={styles.boldText}>
+              ${productPrice.toLocaleString()} {product?.currency }
+            </span>
+          </div>
+
+          <div style={styles.rowBetween}>
+            <span style={styles.mutedText}>Tarifa Base:</span>
+            <span style={styles.boldText}>${BASE_FEE.toLocaleString()} </span>
+          </div>
+
+          <div style={styles.rowBetween}>
+            <span style={styles.mutedText}>Tarifa de Envío:</span>
+            <span style={styles.boldText}>${DELIVERY_FEE.toLocaleString()} </span>
+          </div>
+
+          <div style={styles.divider} />
+
+          <div style={styles.rowBetween}>
+            <span style={styles.totalLabel}>Total a Pagar:</span>
+            <span style={styles.totalPrice}>
+              ${totalAmount.toLocaleString()} 
+            </span>
+          </div>
         </div>
       </div>
 
@@ -227,16 +264,25 @@ const styles: { [key: string]: React.CSSProperties } = {
   sectionsContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '14px',
   },
   cardBox: {
-    padding: '14px 16px',
+    padding: '12px 16px',
     backgroundColor: '#f9fafb',
     borderRadius: '8px',
     border: '1px solid #e5e7eb',
     display: 'flex',
     flexDirection: 'column',
     gap: '4px',
+  },
+  summaryCardBox: {
+    padding: '14px 16px',
+    backgroundColor: '#eef2ff',
+    borderRadius: '8px',
+    border: '1px solid #c7d2fe',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
   },
   sectionLabel: {
     fontSize: '12px',
@@ -245,7 +291,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
     margin: 0,
-    marginBottom: '4px',
+    marginBottom: '2px',
   },
   rowBetween: {
     display: 'flex',
@@ -264,20 +310,33 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: 0,
     marginTop: '2px',
   },
-  productPrice: {
-    fontWeight: 700,
-    color: '#4f46e5',
-    fontSize: '16px',
-  },
   boldText: {
     fontWeight: 500,
     color: '#111827',
     margin: 0,
+    fontSize: '14px',
   },
   mutedText: {
     fontSize: '13px',
     color: '#4b5563',
     margin: 0,
+  },
+  totalLabel: {
+    fontSize: '15px',
+    fontWeight: 700,
+    color: '#1e1b4b',
+    margin: 0,
+  },
+  totalPrice: {
+    fontWeight: 700,
+    color: '#4f46e5',
+    fontSize: '18px',
+    margin: 0,
+  },
+  divider: {
+    height: '1px',
+    backgroundColor: '#c7d2fe',
+    margin: '4px 0',
   },
   buttonContainer: {
     display: 'flex',

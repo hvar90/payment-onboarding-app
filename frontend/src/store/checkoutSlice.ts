@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface TransactionResult {
-  id?: string;
+  gatewayId?: string;
   status?: string;
   reference?: string;
   amountInCents?: number;

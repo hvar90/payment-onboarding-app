@@ -30,7 +30,7 @@ function App() {
           <h2 style={styles.successTitle}>¡Transacción Exitosa!</h2>
           <p style={styles.successText}>Tu pago ha sido procesado correctamente por la pasarela.</p>
           <div style={styles.resultBox}>
-            <p><strong>ID Transacción:</strong> {transactionResult?.id}</p>
+            <p><strong>ID Transacción:</strong> {transactionResult?.gatewayId}</p>
             <p><strong>Estado:</strong> {transactionResult?.status}</p>
             <p><strong>Referencia:</strong> {transactionResult?.reference}</p>
           </div>
