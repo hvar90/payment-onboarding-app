@@ -58,7 +58,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'correo-invalido' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
@@ -75,7 +75,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Cal' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
@@ -92,7 +92,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000123' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
@@ -109,7 +109,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: '   ' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
@@ -126,7 +126,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '01/20' } });
@@ -143,7 +143,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 10' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
@@ -159,7 +159,7 @@ describe('CustomerPaymentForm Component', () => {
 
     const fullNameInput = screen.getByPlaceholderText('Ej. Heberth Vargas');
     const emailInput = screen.getByPlaceholderText('correo@ejemplo.com');
-    const cityInput = screen.getByPlaceholderText('Ej. Cali (Solo letras)');
+    const cityInput = screen.getByPlaceholderText('Ej. Cali');
     const expiryInput = screen.getByPlaceholderText('MM/AA');
     const cvcInput = screen.getByPlaceholderText('123');
 
@@ -196,7 +196,7 @@ describe('CustomerPaymentForm Component', () => {
     fireEvent.change(screen.getByPlaceholderText('Ej. Heberth Vargas'), { target: { value: 'Heberth Vargas' } });
     fireEvent.change(screen.getByPlaceholderText('correo@ejemplo.com'), { target: { value: 'test@example.com' } });
     fireEvent.change(screen.getByPlaceholderText('Ej. Calle 100 # 50-20'), { target: { value: 'Calle 100 # 50-20' } });
-    fireEvent.change(screen.getByPlaceholderText('Ej. Cali (Solo letras)'), { target: { value: 'Cali' } });
+    fireEvent.change(screen.getByPlaceholderText('Ej. Cali'), { target: { value: 'Cali' } });
     fireEvent.change(screen.getByPlaceholderText('4000000000000000'), { target: { value: '4000000000000000' } });
     fireEvent.change(screen.getByPlaceholderText('COMO APARECE EN LA TARJETA'), { target: { value: 'HEBERTH VARGAS' } });
     fireEvent.change(screen.getByPlaceholderText('MM/AA'), { target: { value: '12/28' } });
