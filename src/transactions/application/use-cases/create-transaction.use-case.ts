@@ -21,7 +21,7 @@ export class CreateTransactionUseCase {
     productId: string;
     customerData: { fullName: string; email: string };
     cardData: { token: string; installments: number };
-    deliveryData: { address: string; city: string }; // 👈 Añadido el DTO de envío requerido
+    deliveryData: { address: string; city: string }; 
   }) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -79,7 +79,7 @@ export class CreateTransactionUseCase {
         transactionId: savedTransaction.id,
         address: dto.deliveryData.address,
         city: dto.deliveryData.city,
-        status: 'PENDING', // O 'PREPARING' según lo manejes inicialmente
+        status: 'PENDING', 
       });
       await queryRunner.manager.save(DeliveryEntity, delivery);
 
