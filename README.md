@@ -163,12 +163,12 @@ Puedes explorar, probar e importar todos los endpoints de la API directamente de
   {
     "productId": "d91a575f-500f-4b63-8924-c149fef0c046",
     "customerData": {
-      "email": "pepito@gmail.com",
-      "fullName": "pepito perez"
+      "email": "martadiaz@gmail.com",
+      "fullName": "Marta Diaz Morales"
     },
     "cardData": {
       "cardNumber": "2342342342342342",
-      "cardHolder": "PEPITO",
+      "cardHolder": "MARTA DIAZ MORALES",
       "expiry": "11/34",
       "cvc": "123",
       "token": "tok_simulated_4xrfvbu",
@@ -179,6 +179,7 @@ Puedes explorar, probar e importar todos los endpoints de la API directamente de
       "city": "Cartagena"
     }
   }
+  
   ```
 ##  Despliegue en la Nube (AWS)
 
