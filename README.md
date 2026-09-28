@@ -212,6 +212,7 @@ npm install
 
 
 3. Configura las variables de entorno (crea tu archivo `.env` con las credenciales de conexión a la base de datos PostgreSQL).
+
 4. Ejecuta la aplicación en modo de desarrollo:
 ```bash
 npm run start:dev
@@ -239,6 +240,7 @@ npm install
 
 
 3. Configura las variables de entorno (crea tu archivo de configuración `.env`).
+
 4. Ejecuta la aplicación en modo de desarrollo:
 ```bash
 npm run dev
