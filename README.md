@@ -98,7 +98,7 @@ El backend cuenta con una suite completa de pruebas unitarias implementadas con 
 
 ### Reporte de Cobertura (`npm run test:cov`)
 
-Los resultados globales superan ampliamente el **80% de cobertura** requerido por la prueba, alcanzando un **99.28% en líneas** y **99.35% en declaraciones**:
+Los resultados globales superan ampliamente el **80% de cobertura**, alcanzando un **99.28% en líneas** y **99.35% en declaraciones**:
 
 
 ```text
@@ -145,7 +145,7 @@ El frontend cuenta con una robusta suite de pruebas unitarias e integración des
 
 ### Reporte de Cobertura (`npm test -- --coverage`)
 
-Los resultados globales superan ampliamente el **80% de cobertura** requerido por la prueba, destacando un **96.51% en líneas** y un **100% en funciones**:
+Los resultados globales superan ampliamente el **80% de cobertura**, destacando un **96.51% en líneas** y un **100% en funciones**:
 
 ```text
 Test Suites: 5 passed, 5 total
