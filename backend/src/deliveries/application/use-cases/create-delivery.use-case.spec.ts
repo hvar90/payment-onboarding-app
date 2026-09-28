@@ -1,6 +1,5 @@
 import { CreateDeliveryUseCase } from './create-delivery.use-case';
 import { IDeliveryRepository } from '../../domain/delivery.repository.interface';
-import { DeliveryModel } from '../../domain/delivery.model';
 
 describe('CreateDeliveryUseCase', () => {
   let useCase: CreateDeliveryUseCase;

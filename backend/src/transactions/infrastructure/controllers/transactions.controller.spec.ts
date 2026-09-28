@@ -34,6 +34,7 @@ describe('TransactionsController', () => {
       productId: 'prod-1',
       customerData: { email: 'test@mail.com', fullName: 'Test User' },
       cardData: { token: 'tok_123', installments: 1 },
+      deliveryData: { address: 'Calle 100', city: 'Cali' },
     };
     const result = await controller.create(dto);
     expect(result).toEqual({ id: 'tx-123', status: 'APPROVED' });

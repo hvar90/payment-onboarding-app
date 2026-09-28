@@ -81,7 +81,7 @@ describe('CreateTransactionUseCase', () => {
       productId: 'prod-1',
       customerData: { email: 'test@example.co', fullName: 'Heberth' },
       cardData: { token: 'tok_test_123', installments: 1 },
-      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' }, // 👈 Agregado para cumplir con el DTO
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' },
     };
 
     const result = await useCase.execute(dto);
@@ -99,10 +99,49 @@ describe('CreateTransactionUseCase', () => {
       productId: 'invalid-id',
       customerData: { email: 'test@wompi.co', fullName: 'Heberth' },
       cardData: { token: 'tok_test_123', installments: 1 },
-      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' }, // 👈 Agregado para cumplir con el DTO
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' },
     };
 
     await expect(useCase.execute(dto)).rejects.toThrow(NotFoundException);
     expect(queryRunner.rollbackTransaction).toHaveBeenCalled();
+  });
+
+  it('should handle gateway failure/rejection (catch block)', async () => {
+    const mockProduct = { id: 'prod-1', price: 100000, stock: 5 };
+    queryRunner.manager.findOne
+      .mockResolvedValueOnce(mockProduct)
+      .mockResolvedValueOnce(null);
+
+    apiAdapter.charge.mockRejectedValueOnce(new Error('API Down'));
+
+    const dto = {
+      productId: 'prod-1',
+      customerData: { email: 'test@example.co', fullName: 'Heberth' },
+      cardData: { token: 'tok_test_123', installments: 1 },
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' },
+    };
+
+    const result = await useCase.execute(dto);
+    expect(result.status).toEqual('DECLINED');
+  });
+
+  it('should handle transaction explicitly declined by gateway', async () => {
+    const mockProduct = { id: 'prod-1', price: 100000, stock: 5 };
+    queryRunner.manager.findOne
+      .mockResolvedValueOnce(mockProduct)
+      .mockResolvedValueOnce(null);
+
+    apiAdapter.charge.mockResolvedValueOnce({ id: null, status: 'DECLINED' });
+
+    const dto = {
+      productId: 'prod-1',
+      customerData: { email: 'test@example.co', fullName: 'Heberth' },
+      cardData: { token: 'tok_test_123', installments: 1 },
+      deliveryData: { address: 'Calle 100 # 50-20', city: 'Cali' },
+    };
+
+    const result = await useCase.execute(dto);
+    expect(result.status).toEqual('DECLINED');
+    expect(productRepository.createQueryBuilder).not.toHaveBeenCalled();
   });
 });

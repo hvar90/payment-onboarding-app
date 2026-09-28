@@ -42,4 +42,24 @@ describe('ApiAdapter', () => {
     expect(result).toEqual({ id: 'example-txn-999', status: 'APPROVED' });
     expect(mockedAxios.post).toHaveBeenCalled();
   });
+
+  it('should handle error and return simulated fallback when axios throws', async () => {
+    mockedAxios.post.mockRejectedValueOnce(new Error('Network error'));
+
+    const paymentData = {
+      amountInCents: 50000,
+      currency: 'COP',
+      customerEmail: 'test@mail.com',
+      paymentMethod: {
+        type: 'CARD',
+        installments: 1,
+        token: 'tok_123',
+      },
+      reference: 'ref-002',
+    };
+
+    const result = await adapter.charge(paymentData);
+    expect(result.status).toEqual('APPROVED');
+    expect(result.reference).toEqual('ref-002');
+  });
 });
