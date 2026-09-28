@@ -102,11 +102,28 @@ Los resultados globales superan ampliamente el **80% de cobertura** requerido po
 
 
 ```text
------------------------------------------|---------|----------|---------|---------|-------------------
-File                                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
------------------------------------------|---------|----------|---------|---------|-------------------
-All files                                |   99.34 |    78.57 |   95.00 |   99.28 |                   
------------------------------------------|---------|----------|---------|---------|-------------------
+Test Suites: 11 passed, 11 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        4.523 s
+
+-----------------------------------------|---------|----------|---------|---------|
+File                                     | % Stmts | % Branch | % Funcs | % Lines |
+-----------------------------------------|---------|----------|---------|---------|
+All files                                |   99.35 |    78.57 |   95.23 |   99.28 |
+  customers/application/use-cases        |     100 |       80 |     100 |     100 |
+  customers/domain                       |     100 |      100 |     100 |     100 |
+  deliveries/application/use-cases       |     100 |       75 |     100 |     100 |
+  deliveries/domain                      |     100 |      100 |     100 |     100 |
+  products/application/use-cases         |     100 |       75 |     100 |     100 |
+  products/domain                        |     100 |      100 |     100 |     100 |
+  products/infrastructure/controllers    |     100 |       75 |     100 |     100 |
+  transactions/application/use-cases     |   97.95 |    77.77 |   66.66 |   97.87 |
+  transactions/domain                    |     100 |      100 |     100 |     100 |
+  transactions/infrastructure/controllers|     100 |       75 |     100 |     100 |
+  transactions/infrastructure/dtos       |     100 |      100 |     100 |     100 |
+  transactions/infrastructure/gateways   |     100 |      100 |     100 |     100 |
+-----------------------------------------|---------|----------|---------|---------|
 
 ```
 
@@ -131,11 +148,24 @@ El frontend cuenta con una robusta suite de pruebas unitarias e integración des
 Los resultados globales superan ampliamente el **80% de cobertura** requerido por la prueba, destacando un **96.29% en líneas** y un **100% en funciones**:
 
 ```text
----------------------------------------------------------
-File                         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
----------------------------------------------------------
-All files                    |   95.36 |    84.02 |     100 |   96.29 |                  
----------------------------------------------------------
+Test Suites: 5 passed, 5 total
+Tests:       35 passed, 35 total
+Snapshots:   0 total
+Time:        1.657 s
+
+--------------------------|---------|----------|---------|---------|
+File                      | % Stmts | % Branch | % Funcs | % Lines |
+--------------------------|---------|----------|---------|---------|
+All files                 |   95.58 |    83.78 |     100 |   96.51 |
+  components              |   95.68 |    84.24 |     100 |   96.78 |
+    CheckoutSummary.tsx   |   93.75 |    70.45 |     100 |   93.33 |
+    CustomerPaymentForm.tsx|   95.17 |    88.46 |     100 |    97.1 |
+    ProductSelection.tsx  |     100 |    95.83 |     100 |     100 |
+  services                |     100 |      100 |     100 |     100 |
+    api.ts                |     100 |      100 |     100 |     100 |
+  store                   |   93.54 |       50 |     100 |   93.54 |
+    checkoutSlice.ts      |   93.54 |       50 |     100 |   93.54 |
+--------------------------|---------|----------|---------|---------|
 
 ```
 
