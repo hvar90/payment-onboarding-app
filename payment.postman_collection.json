@@ -27,7 +27,33 @@
           ]
         }
       },
-      "response": []
+      "response": [
+        {
+          "name": "Lista de Productos",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "[\n    {\n        \"id\": \"46d6336f-9d00-4431-8a47-e0164725ac29\",\n        \"name\": \"Suscripción Premium Mensual\",\n        \"description\": \"Acceso completo a herramientas avanzadas de desarrollo y pasarelas de pago.\",\n        \"price\": \"50000.00\",\n        \"stock\": 154\n    },\n    {\n        \"id\": \"3cd49289-b328-43a5-9b5e-365800673566\",\n        \"name\": \"Kit de Arquitectura Hexagonal Pro\",\n        \"description\": \"Plantillas y guías avanzadas de diseño de software en TypeScript.\",\n        \"price\": \"120000.00\",\n        \"stock\": 112\n    },\n    {\n        \"id\": \"d91a575f-500f-4b63-8924-c149fef0c046\",\n        \"name\": \"Consultoría Técnica FullStack\",\n        \"description\": \"Sesión especializada en optimización de microservicios y bases de datos.\",\n        \"price\": \"250000.00\",\n        \"stock\": 628\n    }\n]"
+        }
+      ]
     },
     {
       "name": "Crear Transacción (Pago)",
@@ -41,7 +67,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"productId\": \"d91a575f-500f-4b63-8924-c149fef0c046\",\n  \"customerData\": {\n    \"email\": \"pepito@gmail.com\",\n    \"fullName\": \"pepito perez\"\n  },\n  \"cardData\": {\n    \"cardNumber\": \"2342342342342342\",\n    \"cardHolder\": \"PEPITO\",\n    \"expiry\": \"11/34\",\n    \"cvc\": \"123\",\n    \"token\": \"tok_simulated_4xrfvbu\",\n    \"installments\": 6\n  },\n  \"deliveryData\": {\n    \"address\": \"calle 100 34 56\",\n    \"city\": \"Cartagena\"\n  }\n}"
+          "raw": "{\n  \"productId\": \"d91a575f-500f-4b63-8924-c149fef0c046\",\n  \"customerData\": {\n    \"email\": \"martadiaz@gmail.com\",\n    \"fullName\": \"Marta Diaz Morales\"\n  },\n  \"cardData\": {\n    \"cardNumber\": \"2342342342342342\",\n    \"cardHolder\": \"MARTA DIAZ MORALES\",\n    \"expiry\": \"11/34\",\n    \"cvc\": \"123\",\n    \"token\": \"tok_simulated_4xrfvbu\",\n    \"installments\": 6\n  },\n  \"deliveryData\": {\n    \"address\": \"calle 100 34 56\",\n    \"city\": \"Cartagena\"\n  }\n}"
         },
         "url": {
           "raw": "{{baseUrl}}/transactions",
@@ -53,7 +79,42 @@
           ]
         }
       },
-      "response": []
+      "response": [
+        {
+          "name": "Transacción Exitosa",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"d91a575f-500f-4b63-8924-c149fef0c046\",\n  \"customerData\": {\n    \"email\": \"martadiaz@gmail.com\",\n    \"fullName\": \"Marta Diaz Morales\"\n  },\n  \"cardData\": {\n    \"cardNumber\": \"2342342342342342\",\n    \"cardHolder\": \"MARTA DIAZ MORALES\",\n    \"expiry\": \"11/34\",\n    \"cvc\": \"123\",\n    \"token\": \"tok_simulated_4xrfvbu\",\n    \"installments\": 6\n  },\n  \"deliveryData\": {\n    \"address\": \"calle 100 34 56\",\n    \"city\": \"Cartagena\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n    \"reference\": \"TX-1790575774090\",\n    \"status\": \"APPROVED\",\n    \"totalAmount\": 257000,\n    \"gatewayId\": \"gateway_sim_1790575774592\"\n}"
+        }
+      ]
     }
   ]
 }
