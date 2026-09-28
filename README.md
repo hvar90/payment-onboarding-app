@@ -179,8 +179,8 @@ Puedes explorar, probar e importar todos los endpoints de la API directamente de
       "city": "Cartagena"
     }
   }
-
-  ## ☁️ Despliegue en la Nube (AWS)
+  ```
+##  Despliegue en la Nube (AWS)
 
 La aplicación está completamente desplegada y estructurada utilizando los servicios de Amazon Web Services (AWS) bajo una arquitectura desacoplada:
 
@@ -191,3 +191,4 @@ La aplicación está completamente desplegada y estructurada utilizando los serv
 * **Frontend (SPA en React / Vue):**
   * Compilado de producción estático alojado directamente en un bucket de **Amazon S3**.
   * Accesible públicamente a través del siguiente enlace de pruebas: [http://payment-frontend-app-test.s3-website-us-east-1.amazonaws.com/](http://payment-frontend-app-test.s3-website-us-east-1.amazonaws.com/)
+
