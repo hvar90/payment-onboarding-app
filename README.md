@@ -238,7 +238,7 @@ npm install
 ```
 
 
-3. Configura las variables de entorno (crear o ajustar tu archivo de configuración o `.env`).
+3. Configura las variables de entorno (crea o ajusta tu archivo de configuración `.env`).
 4. Ejecuta la aplicación en modo de desarrollo:
 ```bash
 npm run dev
