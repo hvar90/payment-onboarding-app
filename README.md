@@ -1,4 +1,5 @@
-# payment-onboarding-app
+
+
 ```mermaid
 erDiagram
     customers {
@@ -81,34 +82,37 @@ erDiagram
 
 ---
 
+Aquí tienes la sección del **README** actualizada con los nuevos resultados de las pruebas unitarias y cobertura:
+
+---
+
 ## Pruebas Unitarias y Cobertura (Backend)
 
 El backend cuenta con una suite completa de pruebas unitarias implementadas con **Jest**, cubriendo controladores, casos de uso, adaptadores y mappers bajo los principios de Arquitectura Hexagonal.
 
 ### Resumen de Ejecución
 
-* **Test Suites:** 9 pasadas de 9 en total (100%)
-* **Tests:** 16 pasados de 16 en total (100%)
+* **Test Suites:** 11 pasadas de 11 en total (100%)
+* **Tests:** 22 pasados de 22 en total (100%)
 * **Estado:** Exitoso
 
 ### Reporte de Cobertura (`npm run test:cov`)
 
-Los resultados globales superan el **80% de cobertura** requerido por la prueba, alcanzando un **90% en líneas** y **90.9% en declaraciones**:
+Los resultados globales superan ampliamente el **80% de cobertura** requerido por la prueba, alcanzando un **99.28% en líneas** y **99.34% en declaraciones**:
+
 
 ```text
---------------|---------|----------|---------|---------|-------------------
-File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
---------------|---------|----------|---------|---------|-------------------
-All files     |    90.9 |    76.78 |   76.19 |      90 |                   
---------------|---------|----------|---------|---------|-------------------
+-----------------------------------------|---------|----------|---------|---------|-------------------
+File                                     | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------------------------|---------|----------|---------|---------|-------------------
+All files                                |   99.34 |    78.57 |   95.00 |   99.28 |                   
+-----------------------------------------|---------|----------|---------|---------|-------------------
 
 ```
 
-* **Sentencias (Statements):** 90.9% 
-* **Líneas (Lines):** 90% *(Supera el objetivo del 80% solicitado en la rúbrica)*
-* **Ramas y Funciones (Branches & Funcs):** Promedio superior al 76% en componentes críticos de negocio.
-
----
+* **Sentencias (Statements):** 99.34%
+* **Líneas (Lines):** 99.28% 
+* **Ramas y Funciones (Branches & Funcs):** 78.57% y 95.00% respectivamente en componentes críticos del sistema.
 
 ---
 
@@ -124,7 +128,7 @@ El frontend cuenta con una robusta suite de pruebas unitarias e integración des
 
 ### Reporte de Cobertura (`npm test -- --coverage`)
 
-Los resultados globales superan ampliamente el **80% de cobertura** requerido por la rúbrica de la prueba, destacando un **96.29% en líneas** y un **100% en funciones**:
+Los resultados globales superan ampliamente el **80% de cobertura** requerido por la prueba, destacando un **96.29% en líneas** y un **100% en funciones**:
 
 ```text
 ---------------------------------------------------------
@@ -136,14 +140,14 @@ All files                    |   95.36 |    84.02 |     100 |   96.29 |
 ```
 
 * **Sentencias (Statements):** 95.36% 
-* **Líneas (Lines):** 96.29% *(Supera con creces el objetivo mínimo del 80%)*
+* **Líneas (Lines):** 96.29% 
 * **Funciones (Functions):** 100%
 * **Ramas (Branches):** 84.02%
 ## Postman Collection & API Documentation
 
 Puedes explorar, probar e importar todos los endpoints de la API directamente desde la documentación pública de Postman en el siguiente enlace:
 
-**[Ver Documentación y Colección de Postman en la Web](https://documenter.getpostman.com/view/43607106/2sBYB4Km9q)**
+**[Ver Documentación y Colección de Postman en la Web](https://documenter.getpostman.com/view/43607106/2sBYB4KRpm)**
 
 ### Endpoints Principales
 
@@ -175,3 +179,15 @@ Puedes explorar, probar e importar todos los endpoints de la API directamente de
       "city": "Cartagena"
     }
   }
+
+  ## ☁️ Despliegue en la Nube (AWS)
+
+La aplicación está completamente desplegada y estructurada utilizando los servicios de Amazon Web Services (AWS) bajo una arquitectura desacoplada:
+
+* **Backend (API en NestJS):** 
+  * Se empaquetó el código de la API utilizando **Docker**.
+  * La imagen del contenedor fue almacenada y versionada en **Amazon ECR (Elastic Container Registry)**.
+  * El servicio corre de manera escalable y serverless mediante **ECS Fargate**, gestionando las conexiones con la base de datos alojada en **RDS PostgreSQL**.
+* **Frontend (SPA en React / Vue):**
+  * Compilado de producción estático alojado directamente en un bucket de **Amazon S3**.
+  * Accesible públicamente a través del siguiente enlace de pruebas: [http://payment-frontend-app-test.s3-website-us-east-1.amazonaws.com/](http://payment-frontend-app-test.s3-website-us-east-1.amazonaws.com/)
