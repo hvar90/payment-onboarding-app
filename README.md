@@ -195,9 +195,13 @@ La aplicación está completamente desplegada y estructurada utilizando los serv
 
 
 ###  Configuración y Ejecución del Backend
+
+
+
 1. Navega hasta el directorio del backend:
 ```bash
 cd backend
+
 ```
 
 2. Instala las dependencias del proyecto:
@@ -205,7 +209,10 @@ cd backend
 npm install
 
 ```
-3. Ejecuta la aplicación en modo de desarrollo:
+
+
+3. Configura las variables de entorno (crea o ajusta tu archivo `.env` con las credenciales de conexión a la base de datos PostgreSQL).
+4. Ejecuta la aplicación en modo de desarrollo:
 ```bash
 npm run start:dev
 
@@ -218,11 +225,10 @@ El servidor del backend se iniciará por defecto en el puerto configurado en tu 
 
 
 ###  Configuración y Ejecución del Frontend
-```bash
+
 1. Navega hasta el directorio del frontend:
-
+```bash
 cd frontend
-
 ```
 
 2. Instala las dependencias del proyecto:
@@ -231,7 +237,9 @@ npm install
 
 ```
 
-3. Ejecuta la aplicación en modo de desarrollo:
+
+3. Configura las variables de entorno (si tu aplicación requiere apuntar a una URL de backend específica, asegúrate de crear o ajustar tu archivo de configuración o `.env`).
+4. Ejecuta la aplicación en modo de desarrollo:
 ```bash
 npm run dev
 
@@ -239,6 +247,6 @@ npm run dev
 
 
 
-El servidor de desarrollo con **Vite** se iniciará de inmediato (por lo general estará disponible en `http://localhost:5173`).
 
+El servidor de desarrollo con **Vite** se iniciará de inmediato disponible en `http://localhost:5173`.
 
