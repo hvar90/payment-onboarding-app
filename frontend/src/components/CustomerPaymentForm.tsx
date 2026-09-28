@@ -1,31 +1,52 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCustomerData, setCardData, setDeliveryData, setStep } from '../store/checkoutSlice';
-import type { RootState } from '../store/store.ts';
-import './CustomerPaymentForm.css';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCustomerData,
+  setCardData,
+  setDeliveryData,
+  setStep,
+} from "../store/checkoutSlice";
+import type { RootState } from "../store/store.ts";
+import "./CustomerPaymentForm.css";
 
 export const CustomerPaymentForm: React.FC = () => {
   const dispatch = useDispatch();
-  const currentCustomer = useSelector((state: RootState) => state.checkout.customerData);
-  const currentCard = useSelector((state: RootState) => state.checkout.cardData);
-  const currentDelivery = useSelector((state: RootState) => state.checkout.deliveryData);
+  const currentCustomer = useSelector(
+    (state: RootState) => state.checkout.customerData,
+  );
+  const currentCard = useSelector(
+    (state: RootState) => state.checkout.cardData,
+  );
+  const currentDelivery = useSelector(
+    (state: RootState) => state.checkout.deliveryData,
+  );
 
-  const [fullName, setFullName] = useState(currentCustomer?.fullName || '');
-  const [email, setEmail] = useState(currentCustomer?.email || '');
+  const [fullName, setFullName] = useState(currentCustomer?.fullName || "");
+  const [email, setEmail] = useState(currentCustomer?.email || "");
 
-  const [cardNumber, setCardNumber] = useState(currentCard?.cardNumber || '');
-  const [cardHolder, setCardHolder] = useState(currentCard?.cardHolder || '');
-  const [expiry, setExpiry] = useState(currentCard?.expiry || '');
-  const [cvc, setCvc] = useState(currentCard?.cvc || '');
-  const [installments, setInstallments] = useState(currentCard?.installments || 1);
+  const [cardNumber, setCardNumber] = useState(currentCard?.cardNumber || "");
+  const [cardHolder, setCardHolder] = useState(currentCard?.cardHolder || "");
+  const [expiry, setExpiry] = useState(currentCard?.expiry || "");
+  const [cvc, setCvc] = useState(currentCard?.cvc || "");
+  const [installments, setInstallments] = useState(
+    currentCard?.installments || 1,
+  );
 
-  const [address, setAddress] = useState(currentDelivery?.address || '');
-  const [city, setCity] = useState(currentDelivery?.city || '');
+  const [address, setAddress] = useState(currentDelivery?.address || "");
+  const [city, setCity] = useState(currentDelivery?.city || "");
 
   const [error, setError] = useState<string | null>(null);
 
-  const updateCardInRedux = (num: string, holder: string, exp: string, code: string, inst: number) => {
-    const simulatedToken = currentCard?.token || `tok_simulated_${Math.random().toString(36).substring(2, 9)}`;
+  const updateCardInRedux = (
+    num: string,
+    holder: string,
+    exp: string,
+    code: string,
+    inst: number,
+  ) => {
+    const simulatedToken =
+      currentCard?.token ||
+      `tok_simulated_${Math.random().toString(36).substring(2, 9)}`;
     dispatch(
       setCardData({
         cardNumber: num,
@@ -34,41 +55,50 @@ export const CustomerPaymentForm: React.FC = () => {
         cvc: code,
         token: simulatedToken,
         installments: inst,
-      })
+      }),
     );
   };
 
+  const capitalizeWords = (str: string) => {
+    return str.replace(/\b\w/g, (l) => l.toUpperCase());
+  };
+
   const handleFullNameChange = (value: string) => {
-    const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
-    setFullName(sanitized);
+    const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    const capitalized = capitalizeWords(sanitized);
+    setFullName(capitalized);
     dispatch(setCustomerData({ fullName: sanitized, email }));
   };
 
   const handleEmailChange = (value: string) => {
-    let sanitized = value.replace(/[^a-zA-Z0-9._@+-]/g, '');
-    const parts = sanitized.split('@');
+    let sanitized = value.replace(/[^a-zA-Z0-9._@+-]/g, "");
+    const parts = sanitized.split("@");
     if (parts.length > 2) {
-      sanitized = parts[0] + '@' + parts.slice(1).join('');
+      sanitized = parts[0] + "@" + parts.slice(1).join("");
     }
-    sanitized = sanitized.replace(/\.\./g, '.');
+    sanitized = sanitized.replace(/\.\./g, ".");
     setEmail(sanitized);
     dispatch(setCustomerData({ fullName, email: sanitized }));
   };
 
   const handleCardNumberChange = (value: string) => {
-    const digitsOnly = value.replace(/\D/g, '').slice(0, 16);
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 16);
     setCardNumber(digitsOnly);
     updateCardInRedux(digitsOnly, cardHolder, expiry, cvc, installments);
   };
 
+  
+
   const handleCardHolderChange = (value: string) => {
-    const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '').toUpperCase();
+    const sanitized = value
+      .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "")
+      .toUpperCase();
     setCardHolder(sanitized);
     updateCardInRedux(cardNumber, sanitized, expiry, cvc, installments);
   };
 
   const handleExpiryChange = (value: string) => {
-    const digitsOnly = value.replace(/\D/g, '').slice(0, 4);
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 4);
     if (digitsOnly.length >= 1 && parseInt(digitsOnly[0], 10) > 1) return;
     if (digitsOnly.length >= 2) {
       const monthNum = parseInt(digitsOnly.slice(0, 2), 10);
@@ -85,7 +115,7 @@ export const CustomerPaymentForm: React.FC = () => {
   };
 
   const handleCvcChange = (value: string) => {
-    const digitsOnly = value.replace(/\D/g, '').slice(0, 4);
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 4);
     setCvc(digitsOnly);
     updateCardInRedux(cardNumber, cardHolder, expiry, digitsOnly, installments);
   };
@@ -96,14 +126,16 @@ export const CustomerPaymentForm: React.FC = () => {
   };
 
   const handleCityChange = (value: string) => {
-    const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
-    setCity(sanitized);
+    const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
+    const capitalized = capitalizeWords(sanitized);
+    setCity(capitalized);
     dispatch(setDeliveryData({ address, city: sanitized }));
   };
 
   const handleAddressChange = (value: string) => {
-    const sanitized = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ#\-/°.,\s]/g, '');
-    setAddress(sanitized);
+    const sanitized = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ#\-/°.,\s]/g, "");
+    const capitalized = capitalizeWords(sanitized);
+    setAddress(capitalized);
     dispatch(setDeliveryData({ address: sanitized, city }));
   };
 
@@ -114,7 +146,7 @@ export const CustomerPaymentForm: React.FC = () => {
 
   const validateExpiryDate = (expiryStr: string) => {
     if (expiryStr.length !== 5) return false;
-    const [monthStr, yearStr] = expiryStr.split('/');
+    const [monthStr, yearStr] = expiryStr.split("/");
     const month = parseInt(monthStr, 10);
     const year = parseInt(`20${yearStr}`, 10);
     if (isNaN(month) || month < 1 || month > 12) return false;
@@ -130,35 +162,37 @@ export const CustomerPaymentForm: React.FC = () => {
 
   const handleProceedToSummary = () => {
     if (!fullName.trim() || !email.trim()) {
-      setError('Por favor completa todos los datos del cliente.');
+      setError("Por favor completa todos los datos del cliente.");
       return false;
     }
     if (!validateEmail(email)) {
-      setError('Por favor ingresa un correo electrónico válido.');
+      setError("Por favor ingresa un correo electrónico válido.");
       return false;
     }
     if (!address.trim() || address.trim().length < 5) {
-      setError('Por favor ingresa una dirección de envío válida (mínimo 5 caracteres).');
+      setError(
+        "Por favor ingresa una dirección de envío válida (mínimo 5 caracteres).",
+      );
       return false;
     }
     if (!city.trim() || city.trim().length < 2) {
-      setError('Por favor ingresa una ciudad válida.');
+      setError("Por favor ingresa una ciudad válida.");
       return false;
     }
     if (cardNumber.length < 13 || cardNumber.length > 16) {
-      setError('El número de tarjeta debe tener entre 13 y 16 dígitos.');
+      setError("El número de tarjeta debe tener entre 13 y 16 dígitos.");
       return false;
     }
     if (!cardHolder.trim()) {
-      setError('Por favor ingresa el titular de la tarjeta.');
+      setError("Por favor ingresa el titular de la tarjeta.");
       return false;
     }
     if (!validateExpiryDate(expiry)) {
-      setError('Fecha de expiración inválida o tarjeta vencida.');
+      setError("Fecha de expiración inválida o tarjeta vencida.");
       return false;
     }
     if (cvc.length < 3) {
-      setError('El código CVC/CVV debe tener al menos 3 dígitos.');
+      setError("El código CVC/CVV debe tener al menos 3 dígitos.");
       return false;
     }
 
@@ -178,14 +212,18 @@ export const CustomerPaymentForm: React.FC = () => {
     <div className="customer-form-container">
       <div className="customer-form-header">
         <h2 className="customer-form-title">Datos de Cliente, Envío y Pago</h2>
-        <p className="customer-form-subtitle">Completa tu información para procesar la transacción</p>
+        <p className="customer-form-subtitle">
+          Completa tu información para procesar la transacción
+        </p>
       </div>
 
       {error && <div className="customer-form-error-alert">⚠️ {error}</div>}
 
       <div className="customer-form-section">
         <div className="customer-form-section-group">
-          <h3 className="customer-form-section-title">1. Información del Cliente</h3>
+          <h3 className="customer-form-section-title">
+            1. Información del Cliente
+          </h3>
           <div className="customer-form-input-group">
             <label className="customer-form-label">Nombre Completo</label>
             <input
@@ -233,7 +271,9 @@ export const CustomerPaymentForm: React.FC = () => {
         </div>
 
         <div className="customer-form-section-group">
-          <h3 className="customer-form-section-title">3. Datos de la Tarjeta</h3>
+          <h3 className="customer-form-section-title">
+            3. Datos de la Tarjeta
+          </h3>
           <div className="customer-form-input-group">
             <label className="customer-form-label">Número de Tarjeta</label>
             <input
@@ -291,7 +331,7 @@ export const CustomerPaymentForm: React.FC = () => {
             >
               {[1, 2, 3, 6, 12].map((num) => (
                 <option key={num} value={num}>
-                  {num} {num === 1 ? 'Cuota' : 'Cuotas'}
+                  {num} {num === 1 ? "Cuota" : "Cuotas"}
                 </option>
               ))}
             </select>
@@ -299,10 +339,18 @@ export const CustomerPaymentForm: React.FC = () => {
         </div>
 
         <div className="customer-form-button-container">
-          <button type="button" onClick={handleGoBack} className="customer-form-back-button">
+          <button
+            type="button"
+            onClick={handleGoBack}
+            className="customer-form-back-button"
+          >
             Volver
           </button>
-          <button type="button" onClick={handleProceedToSummary} className="customer-form-primary-button">
+          <button
+            type="button"
+            onClick={handleProceedToSummary}
+            className="customer-form-primary-button"
+          >
             Continuar con el Pago
           </button>
         </div>
