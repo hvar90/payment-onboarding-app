@@ -10,7 +10,7 @@ interface Product {
   description: string;
   price: number;
   currency: string;
-  stock: number; // 1. Añadimos la propiedad stock aquí
+  stock: number; 
 }
 
 export const ProductSelection: React.FC = () => {

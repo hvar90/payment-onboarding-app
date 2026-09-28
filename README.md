@@ -82,7 +82,6 @@ erDiagram
 
 ---
 
-Aquí tienes la sección del **README** actualizada con los nuevos resultados de las pruebas unitarias y cobertura:
 
 ---
 
