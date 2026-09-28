@@ -222,7 +222,7 @@ npm run start:dev
 
 
 
-El servidor del backend se iniciará por defecto en el puerto 3000.
+El servidor del backend se iniciará en el puerto 3000.
 
 
 ###  Configuración y Ejecución del Frontend
