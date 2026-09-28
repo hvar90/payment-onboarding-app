@@ -143,7 +143,7 @@ All files                    |   95.36 |    84.02 |     100 |   96.29 |
 
 Puedes explorar, probar e importar todos los endpoints de la API directamente desde la documentación pública de Postman en el siguiente enlace:
 
-**[Ver Documentación y Colección de Postman en la Web](https://documenter.getpostman.com/view/43607106/2sBYB4KRpm)**
+**[Ver Documentación y Colección de Postman en la Web](https://documenter.getpostman.com/view/43607106/2sBYB4Km9q)**
 
 ### Endpoints Principales
 
