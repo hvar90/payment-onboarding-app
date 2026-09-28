@@ -250,5 +250,5 @@ npm run dev
 
 
 
-El servidor de desarrollo con **Vite** se iniciará de inmediato disponible en `http://localhost:5173`.
+El servidor de desarrollo con **Vite** se iniciará en `http://localhost:5173`.
 
