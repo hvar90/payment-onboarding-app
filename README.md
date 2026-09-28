@@ -82,6 +82,7 @@ erDiagram
 
 ---
 
+Aquí tienes la sección del **README** actualizada con los nuevos resultados de las pruebas unitarias y cobertura:
 
 ---
 
@@ -146,7 +147,7 @@ All files                    |   95.36 |    84.02 |     100 |   96.29 |
 
 Puedes explorar, probar e importar todos los endpoints de la API directamente desde la documentación pública de Postman en el siguiente enlace:
 
-**[Ver Documentación y Colección de Postman en la Web](https://documenter.getpostman.com/view/43607106/2sBYB4KmPA)**
+**[Ver Documentación y Colección de Postman en la Web](https://documenter.getpostman.com/view/43607106/2sBYB4KRpm)**
 
 ### Endpoints Principales
 
@@ -162,12 +163,12 @@ Puedes explorar, probar e importar todos los endpoints de la API directamente de
   {
     "productId": "d91a575f-500f-4b63-8924-c149fef0c046",
     "customerData": {
-      "email": "martadiaz@gmail.com",
-      "fullName": "Marta Diaz Morales"
+      "email": "pepito@gmail.com",
+      "fullName": "pepito perez"
     },
     "cardData": {
       "cardNumber": "2342342342342342",
-      "cardHolder": "MARTA DIAZ MORALES",
+      "cardHolder": "PEPITO",
       "expiry": "11/34",
       "cvc": "123",
       "token": "tok_simulated_4xrfvbu",
@@ -190,4 +191,54 @@ La aplicación está completamente desplegada y estructurada utilizando los serv
 * **Frontend (SPA en React / Vue):**
   * Compilado de producción estático alojado directamente en un bucket de **Amazon S3**.
   * Accesible públicamente a través del siguiente enlace de pruebas: [http://payment-frontend-app-test.s3-website-us-east-1.amazonaws.com/](http://payment-frontend-app-test.s3-website-us-east-1.amazonaws.com/)
+
+
+
+###  Configuración y Ejecución del Backend
+1. Navega hasta el directorio del backend:
+```bash
+cd backend
+```
+
+2. Instala las dependencias del proyecto:
+```bash
+npm install
+
+```
+3. Ejecuta la aplicación en modo de desarrollo:
+```bash
+npm run start:dev
+
+```
+
+
+
+
+El servidor del backend se iniciará por defecto en el puerto configurado en tu aplicación 3000.
+
+
+###  Configuración y Ejecución del Frontend
+```bash
+1. Navega hasta el directorio del frontend:
+
+cd frontend
+
+```
+
+2. Instala las dependencias del proyecto:
+```bash
+npm install
+
+```
+
+3. Ejecuta la aplicación en modo de desarrollo:
+```bash
+npm run dev
+
+```
+
+
+
+El servidor de desarrollo con **Vite** se iniciará de inmediato (por lo general estará disponible en `http://localhost:5173`).
+
 
