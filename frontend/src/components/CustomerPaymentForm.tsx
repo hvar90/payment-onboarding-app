@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCustomerData, setCardData, setDeliveryData, setStep } from '../store/checkoutSlice';
 import type { RootState } from '../store/store.ts';
+import './CustomerPaymentForm.css';
 
 export const CustomerPaymentForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -94,14 +95,12 @@ export const CustomerPaymentForm: React.FC = () => {
     updateCardInRedux(cardNumber, cardHolder, expiry, cvc, value);
   };
 
-  // Validación en tiempo real para Ciudad: Solo letras, espacios y acentos (sin números)
   const handleCityChange = (value: string) => {
     const sanitized = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
     setCity(sanitized);
     dispatch(setDeliveryData({ address, city: sanitized }));
   };
 
-  // Validación en tiempo real para Dirección: Letras, números, espacios y caracteres comunes de nomenclatura (#, -, /, °, ., ,)
   const handleAddressChange = (value: string) => {
     const sanitized = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ#\-/°.,\s]/g, '');
     setAddress(sanitized);
@@ -167,79 +166,76 @@ export const CustomerPaymentForm: React.FC = () => {
     dispatch(setCustomerData({ fullName, email }));
     dispatch(setDeliveryData({ address, city }));
     updateCardInRedux(cardNumber, cardHolder, expiry, cvc, installments);
-    dispatch(setStep(3)); // Cambia al paso de Resumen/Confirmación de pago
+    dispatch(setStep(3));
     return true;
   };
 
   const handleGoBack = () => {
-    dispatch(setStep(1)); // Vuelve al paso anterior (selección de producto)
+    dispatch(setStep(1));
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>Datos de Cliente, Envío y Pago</h2>
-        <p style={styles.subtitle}>Completa tu información para procesar la transacción</p>
+    <div className="customer-form-container">
+      <div className="customer-form-header">
+        <h2 className="customer-form-title">Datos de Cliente, Envío y Pago</h2>
+        <p className="customer-form-subtitle">Completa tu información para procesar la transacción</p>
       </div>
 
-      {error && <div style={styles.errorAlert}>⚠️ {error}</div>}
+      {error && <div className="customer-form-error-alert">⚠️ {error}</div>}
 
-      <div style={styles.formSection}>
-        {/* Sección 1: Información del Cliente */}
-        <div style={styles.sectionGroup}>
-          <h3 style={styles.sectionTitle}>1. Información del Cliente</h3>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Nombre Completo</label>
+      <div className="customer-form-section">
+        <div className="customer-form-section-group">
+          <h3 className="customer-form-section-title">1. Información del Cliente</h3>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Nombre Completo</label>
             <input
               type="text"
               value={fullName}
               onChange={(e) => handleFullNameChange(e.target.value)}
               placeholder="Ej. Heberth Vargas"
-              style={styles.input}
+              className="customer-form-input"
             />
           </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Correo Electrónico</label>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Correo Electrónico</label>
             <input
               type="text"
               value={email}
               onChange={(e) => handleEmailChange(e.target.value)}
               placeholder="correo@ejemplo.com"
-              style={styles.input}
+              className="customer-form-input"
             />
           </div>
         </div>
 
-        {/* Sección 2: Datos de Envío (Delivery) */}
-        <div style={styles.sectionGroup}>
-          <h3 style={styles.sectionTitle}>2. Dirección de Envío</h3>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Dirección</label>
+        <div className="customer-form-section-group">
+          <h3 className="customer-form-section-title">2. Dirección de Envío</h3>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Dirección</label>
             <input
               type="text"
               value={address}
               onChange={(e) => handleAddressChange(e.target.value)}
               placeholder="Ej. Calle 100 # 50-20"
-              style={styles.input}
+              className="customer-form-input"
             />
           </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Ciudad</label>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Ciudad</label>
             <input
               type="text"
               value={city}
               onChange={(e) => handleCityChange(e.target.value)}
               placeholder="Ej. Cali"
-              style={styles.input}
+              className="customer-form-input"
             />
           </div>
         </div>
 
-        {/* Sección 3: Datos de la Tarjeta */}
-        <div style={styles.sectionGroup}>
-          <h3 style={styles.sectionTitle}>3. Datos de la Tarjeta</h3>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Número de Tarjeta</label>
+        <div className="customer-form-section-group">
+          <h3 className="customer-form-section-title">3. Datos de la Tarjeta</h3>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Número de Tarjeta</label>
             <input
               type="text"
               inputMode="numeric"
@@ -247,22 +243,22 @@ export const CustomerPaymentForm: React.FC = () => {
               value={cardNumber}
               onChange={(e) => handleCardNumberChange(e.target.value)}
               placeholder="4000000000000000"
-              style={{ ...styles.input, fontFamily: 'monospace' }}
+              className="customer-form-input customer-form-input-mono"
             />
           </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Titular de la Tarjeta</label>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Titular de la Tarjeta</label>
             <input
               type="text"
               value={cardHolder}
               onChange={(e) => handleCardHolderChange(e.target.value)}
               placeholder="COMO APARECE EN LA TARJETA"
-              style={{ ...styles.input, textTransform: 'uppercase' }}
+              className="customer-form-input customer-form-input-uppercase"
             />
           </div>
-          <div style={styles.rowGrid}>
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>Expiración (MM/AA)</label>
+          <div className="customer-form-row-grid">
+            <div className="customer-form-input-group">
+              <label className="customer-form-label">Expiración (MM/AA)</label>
               <input
                 type="text"
                 inputMode="numeric"
@@ -270,11 +266,11 @@ export const CustomerPaymentForm: React.FC = () => {
                 value={expiry}
                 onChange={(e) => handleExpiryChange(e.target.value)}
                 placeholder="MM/AA"
-                style={{ ...styles.input, fontFamily: 'monospace', textAlign: 'center' }}
+                className="customer-form-input customer-form-input-mono customer-form-input-center"
               />
             </div>
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>CVC / CVV</label>
+            <div className="customer-form-input-group">
+              <label className="customer-form-label">CVC / CVV</label>
               <input
                 type="password"
                 inputMode="numeric"
@@ -282,16 +278,16 @@ export const CustomerPaymentForm: React.FC = () => {
                 value={cvc}
                 onChange={(e) => handleCvcChange(e.target.value)}
                 placeholder="123"
-                style={{ ...styles.input, fontFamily: 'monospace', textAlign: 'center' }}
+                className="customer-form-input customer-form-input-mono customer-form-input-center"
               />
             </div>
           </div>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Cuotas</label>
+          <div className="customer-form-input-group">
+            <label className="customer-form-label">Cuotas</label>
             <select
               value={installments}
               onChange={(e) => handleInstallmentsChange(Number(e.target.value))}
-              style={styles.input}
+              className="customer-form-input"
             >
               {[1, 2, 3, 6, 12].map((num) => (
                 <option key={num} value={num}>
@@ -302,137 +298,15 @@ export const CustomerPaymentForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Botones de Navegación */}
-        <div style={styles.buttonContainer}>
-          <button type="button" onClick={handleGoBack} style={styles.backButton}>
+        <div className="customer-form-button-container">
+          <button type="button" onClick={handleGoBack} className="customer-form-back-button">
             Volver
           </button>
-          <button type="button" onClick={handleProceedToSummary} style={styles.primaryButton}>
+          <button type="button" onClick={handleProceedToSummary} className="customer-form-primary-button">
             Continuar con el Pago
           </button>
         </div>
       </div>
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    maxWidth: '520px',
-    width: '100%',
-    margin: '24px auto',
-    padding: '24px',
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-    textAlign: 'left',
-    boxSizing: 'border-box',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '20px',
-  },
-  title: {
-    fontSize: '22px',
-    fontWeight: 700,
-    color: '#1a1a1a',
-    margin: 0,
-  },
-  subtitle: {
-    fontSize: '13px',
-    color: '#666666',
-    marginTop: '6px',
-  },
-  errorAlert: {
-    padding: '10px 14px',
-    backgroundColor: '#fdf2f2',
-    border: '1px solid #f8d7da',
-    borderRadius: '8px',
-    color: '#a94442',
-    fontSize: '13px',
-    fontWeight: 500,
-    textAlign: 'center',
-    marginBottom: '16px',
-  },
-  formSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  },
-  sectionGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-  },
-  sectionTitle: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: '#333333',
-    borderBottom: '1px solid #eaeaea',
-    paddingBottom: '8px',
-    margin: 0,
-  },
-  inputGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-    width: '100%',
-  },
-  label: {
-    fontSize: '13px',
-    fontWeight: 500,
-    color: '#444444',
-  },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    fontSize: '14px',
-    color: '#1f2937',
-    backgroundColor: '#ffffff',
-    outline: 'none',
-    boxSizing: 'border-box',
-  },
-  rowGrid: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: '12px',
-    width: '100%',
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '12px',
-    marginTop: '16px',
-    paddingTop: '16px',
-    borderTop: '1px solid #eaeaea',
-    width: '100%',
-  },
-  backButton: {
-    flex: '1',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    fontWeight: 600,
-    fontSize: '14px',
-    color: '#4b5563',
-    backgroundColor: '#f3f4f6',
-    border: 'none',
-    cursor: 'pointer',
-    textAlign: 'center',
-  },
-  primaryButton: {
-    flex: '2',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    fontWeight: 600,
-    fontSize: '14px',
-    color: '#ffffff',
-    backgroundColor: '#4f46e5',
-    border: 'none',
-    cursor: 'pointer',
-    textAlign: 'center',
-  },
 };

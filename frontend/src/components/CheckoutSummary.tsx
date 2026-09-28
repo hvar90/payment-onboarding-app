@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setStep, setTransactionResult } from '../store/checkoutSlice';
 import type { RootState } from '../store/store.ts';
+import './CheckoutSummary.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -23,7 +24,6 @@ export const CheckoutSummary: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Tarifas fijas exigidas por la regla de negocio de la prueba técnica
   const BASE_FEE = 2000;
   const DELIVERY_FEE = 5000;
 
@@ -41,7 +41,7 @@ export const CheckoutSummary: React.FC = () => {
     }
   }, [selectedProductId]);
 
-  const productPrice = product ? Number(product.price)/ 100 : 0;
+  const productPrice = product ? Number(product.price) / 100 : 0;
   const totalAmount = productPrice + BASE_FEE + DELIVERY_FEE;
 
   const handlePay = async () => {
@@ -96,7 +96,7 @@ export const CheckoutSummary: React.FC = () => {
       const result = await response.json();
 
       dispatch(setTransactionResult(result));
-      dispatch(setStep(4)); // Avanzar a la pantalla de resultado
+      dispatch(setStep(4));
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -113,96 +113,90 @@ export const CheckoutSummary: React.FC = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>Resumen de tu Orden</h2>
-        <p style={styles.subtitle}>
+    <div className="checkout-summary-container">
+      <div className="checkout-summary-header">
+        <h2 className="checkout-summary-title">Resumen de tu Orden</h2>
+        <p className="checkout-summary-subtitle">
           Verifica los datos y costos antes de confirmar el pago
         </p>
       </div>
 
-      {error && <div style={styles.errorAlert}>⚠️ {error}</div>}
+      {error && <div className="checkout-summary-error-alert">⚠️ {error}</div>}
 
-      <div style={styles.sectionsContainer}>
-        {/* Detalle del Producto */}
-        <div style={styles.cardBox}>
-          <h3 style={styles.sectionLabel}>Producto Seleccionado</h3>
+      <div className="checkout-summary-sections-container">
+        <div className="checkout-summary-card-box">
+          <h3 className="checkout-summary-section-label">Producto Seleccionado</h3>
           {product ? (
-            <div style={styles.rowBetween}>
+            <div className="checkout-summary-row-between">
               <div>
-                <p style={styles.productName}>{product.name}</p>
-                <p style={styles.productDesc}>{product.description}</p>
+                <p className="checkout-summary-product-name">{product.name}</p>
+                <p className="checkout-summary-product-desc">{product.description}</p>
               </div>
             </div>
           ) : (
-            <p style={styles.mutedText}>Cargando producto...</p>
+            <p className="checkout-summary-muted-text">Cargando producto...</p>
           )}
         </div>
 
-        {/* Detalle del Cliente */}
-        <div style={styles.cardBox}>
-          <h3 style={styles.sectionLabel}>Datos del Cliente</h3>
-          <p style={styles.boldText}>{customerData?.fullName}</p>
-          <p style={styles.mutedText}>{customerData?.email}</p>
+        <div className="checkout-summary-card-box">
+          <h3 className="checkout-summary-section-label">Datos del Cliente</h3>
+          <p className="checkout-summary-bold-text">{customerData?.fullName}</p>
+          <p className="checkout-summary-muted-text">{customerData?.email}</p>
         </div>
 
-        {/* Detalle de Envío */}
-        <div style={styles.cardBox}>
-          <h3 style={styles.sectionLabel}>Datos de Envío</h3>
-          <p style={styles.boldText}>Dirección: {deliveryData?.address || 'No especificada'}</p>
-          <p style={styles.mutedText}>Ciudad: {deliveryData?.city || 'No especificada'}</p>
+        <div className="checkout-summary-card-box">
+          <h3 className="checkout-summary-section-label">Datos de Envío</h3>
+          <p className="checkout-summary-bold-text">Dirección: {deliveryData?.address || 'No especificada'}</p>
+          <p className="checkout-summary-muted-text">Ciudad: {deliveryData?.city || 'No especificada'}</p>
         </div>
 
-        {/* Detalle del Método de Pago */}
-        <div style={styles.cardBox}>
-          <h3 style={styles.sectionLabel}>Método de Pago</h3>
-          <p style={styles.boldText}>
+        <div className="checkout-summary-card-box">
+          <h3 className="checkout-summary-section-label">Método de Pago</h3>
+          <p className="checkout-summary-bold-text">
             Tarjeta terminada en {cardData?.cardNumber ? cardData.cardNumber.slice(-4) : '****'}
           </p>
-          <p style={styles.mutedText}>
+          <p className="checkout-summary-muted-text">
             Cuotas seleccionadas: {cardData?.installments || 1}
           </p>
         </div>
 
-        {/* Resumen de Costos Exigido por la Prueba */}
-        <div style={styles.summaryCardBox}>
-          <h3 style={styles.sectionLabel}>Desglose de Pago</h3>
+        <div className="checkout-summary-summary-card-box">
+          <h3 className="checkout-summary-section-label">Desglose de Pago</h3>
           
-          <div style={styles.rowBetween}>
-            <span style={styles.mutedText}>Precio del Producto:</span>
-            <span style={styles.boldText}>
-              ${productPrice.toLocaleString()} {product?.currency }
+          <div className="checkout-summary-row-between">
+            <span className="checkout-summary-muted-text">Precio del Producto:</span>
+            <span className="checkout-summary-bold-text">
+              ${productPrice.toLocaleString()} {product?.currency}
             </span>
           </div>
 
-          <div style={styles.rowBetween}>
-            <span style={styles.mutedText}>Tarifa Base:</span>
-            <span style={styles.boldText}>${BASE_FEE.toLocaleString()} </span>
+          <div className="checkout-summary-row-between">
+            <span className="checkout-summary-muted-text">Tarifa Base:</span>
+            <span className="checkout-summary-bold-text">${BASE_FEE.toLocaleString()}</span>
           </div>
 
-          <div style={styles.rowBetween}>
-            <span style={styles.mutedText}>Tarifa de Envío:</span>
-            <span style={styles.boldText}>${DELIVERY_FEE.toLocaleString()} </span>
+          <div className="checkout-summary-row-between">
+            <span className="checkout-summary-muted-text">Tarifa de Envío:</span>
+            <span className="checkout-summary-bold-text">${DELIVERY_FEE.toLocaleString()}</span>
           </div>
 
-          <div style={styles.divider} />
+          <div className="checkout-summary-divider" />
 
-          <div style={styles.rowBetween}>
-            <span style={styles.totalLabel}>Total a Pagar:</span>
-            <span style={styles.totalPrice}>
-              ${totalAmount.toLocaleString()} 
+          <div className="checkout-summary-row-between">
+            <span className="checkout-summary-total-label">Total a Pagar:</span>
+            <span className="checkout-summary-total-price">
+              ${totalAmount.toLocaleString()}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Botones de Acción */}
-      <div style={styles.buttonContainer}>
+      <div className="checkout-summary-button-container">
         <button
           type="button"
           onClick={handleBack}
           disabled={loading}
-          style={styles.backButton}
+          className="checkout-summary-back-button"
         >
           Volver
         </button>
@@ -210,8 +204,8 @@ export const CheckoutSummary: React.FC = () => {
           type="button"
           onClick={handlePay}
           disabled={loading}
+          className="checkout-summary-primary-button"
           style={{
-            ...styles.primaryButton,
             backgroundColor: loading ? '#818cf8' : '#4f46e5',
             cursor: loading ? 'not-allowed' : 'pointer',
           }}
@@ -221,152 +215,4 @@ export const CheckoutSummary: React.FC = () => {
       </div>
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    maxWidth: '520px',
-    width: '100%',
-    margin: '24px auto',
-    padding: '24px',
-    backgroundColor: '#ffffff',
-    borderRadius: '12px',
-    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
-    textAlign: 'left',
-    boxSizing: 'border-box',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '20px',
-  },
-  title: {
-    fontSize: '22px',
-    fontWeight: 700,
-    color: '#1a1a1a',
-    margin: 0,
-  },
-  subtitle: {
-    fontSize: '13px',
-    color: '#666666',
-    marginTop: '6px',
-  },
-  errorAlert: {
-    padding: '10px 14px',
-    backgroundColor: '#fdf2f2',
-    border: '1px solid #f8d7da',
-    borderRadius: '8px',
-    color: '#a94442',
-    fontSize: '13px',
-    fontWeight: 500,
-    textAlign: 'center',
-    marginBottom: '16px',
-  },
-  sectionsContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '14px',
-  },
-  cardBox: {
-    padding: '12px 16px',
-    backgroundColor: '#f9fafb',
-    borderRadius: '8px',
-    border: '1px solid #e5e7eb',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  summaryCardBox: {
-    padding: '14px 16px',
-    backgroundColor: '#eef2ff',
-    borderRadius: '8px',
-    border: '1px solid #c7d2fe',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  sectionLabel: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#6b7280',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-    margin: 0,
-    marginBottom: '2px',
-  },
-  rowBetween: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  productName: {
-    fontWeight: 600,
-    color: '#111827',
-    margin: 0,
-  },
-  productDesc: {
-    fontSize: '13px',
-    color: '#4b5563',
-    margin: 0,
-    marginTop: '2px',
-  },
-  boldText: {
-    fontWeight: 500,
-    color: '#111827',
-    margin: 0,
-    fontSize: '14px',
-  },
-  mutedText: {
-    fontSize: '13px',
-    color: '#4b5563',
-    margin: 0,
-  },
-  totalLabel: {
-    fontSize: '15px',
-    fontWeight: 700,
-    color: '#1e1b4b',
-    margin: 0,
-  },
-  totalPrice: {
-    fontWeight: 700,
-    color: '#4f46e5',
-    fontSize: '18px',
-    margin: 0,
-  },
-  divider: {
-    height: '1px',
-    backgroundColor: '#c7d2fe',
-    margin: '4px 0',
-  },
-  buttonContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: '12px',
-    marginTop: '24px',
-    paddingTop: '16px',
-    borderTop: '1px solid #eaeaea',
-  },
-  backButton: {
-    flex: '1',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    fontWeight: 600,
-    fontSize: '14px',
-    color: '#4b5563',
-    backgroundColor: '#f3f4f6',
-    border: 'none',
-    cursor: 'pointer',
-    textAlign: 'center',
-  },
-  primaryButton: {
-    flex: '2',
-    padding: '12px 16px',
-    borderRadius: '8px',
-    fontWeight: 600,
-    fontSize: '14px',
-    color: '#ffffff',
-    border: 'none',
-    textAlign: 'center',
-  },
 };
